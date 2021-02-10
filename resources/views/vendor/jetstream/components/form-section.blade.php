@@ -1,26 +1,25 @@
 @props(['submit'])
-
-<div {{ $attributes->merge(['class' => 'md:grid md:grid-cols-3 md:gap-6']) }}>
-    <x-jet-section-title>
-        <x-slot name="title">{{ $title }}</x-slot>
-        <x-slot name="description">{{ $description }}</x-slot>
-    </x-jet-section-title>
-
-    <div class="mt-5 md:mt-0 md:col-span-2">
-        <form wire:submit.prevent="{{ $submit }}">
-            <div class="shadow overflow-hidden sm:rounded-md">
-                <div class="px-4 py-5 bg-white sm:p-6">
-                    <div class="grid grid-cols-6 gap-6">
-                        {{ $form }}
-                    </div>
-                </div>
-
+<div id="flHorizontalForm" class="col-lg-12 layout-spacing">
+    <div class="statbox widget box box-shadow">
+        <div class="widget-header">                                
+            <div class="row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                <x-jet-section-title>
+                    <x-slot name="title">{{ $title }}</x-slot>
+                    <x-slot name="description">{{ $description }}</x-slot>
+                </x-jet-section-title>
+                </div>                                                                        
+            </div>
+        </div>
+        <div class="widget-content widget-content-area">
+            <form wire:submit.prevent="{{ $submit }}">
+                {{$form}}
                 @if (isset($actions))
-                    <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6">
+                    <div class="text-right">
                         {{ $actions }}
                     </div>
                 @endif
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
