@@ -8,10 +8,10 @@
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
         <!-- Styles -->
-        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+        <!-- <link rel="stylesheet" href="{{ mix('css/app.css') }}"> -->
         @livewireStyles
         <!-- Scripts -->
-        <script src="{{ mix('js/app.js') }}" defer></script>
+        <!-- <script src="{{ mix('js/app.js') }}" defer></script> -->
         <link href="{{ asset('assets/css/loader.css') }}" rel="stylesheet" type="text/css" />
         <script src="{{ asset('assets/js/loader.js') }}"></script>
         <!-- BEGIN GLOBAL MANDATORY STYLES -->
@@ -37,7 +37,6 @@
         <div class="sub-header-container">
             <header class="header navbar navbar-expand-sm">
                 <a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></a>
-
                 <ul class="navbar-nav flex-row">
                     <li>
                         <div class="page-header">
@@ -46,23 +45,7 @@
                                     <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
                                     <li class="breadcrumb-item active" aria-current="page"><span>Sales</span></li>
                                 </ol>
-                                {{$header}}
                             </nav>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="navbar-nav flex-row ml-auto ">
-                    <li class="nav-item more-dropdown">
-                        <div class="dropdown  custom-dropdown-icon">
-                            <a class="dropdown-toggle btn" href="#" role="button" id="customDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Settings</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg></a>
-
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="customDropdown">
-                                <a class="dropdown-item" data-value="Settings" href="javascript:void(0);">Settings</a>
-                                <a class="dropdown-item" data-value="Mail" href="javascript:void(0);">Mail</a>
-                                <a class="dropdown-item" data-value="Print" href="javascript:void(0);">Print</a>
-                                <a class="dropdown-item" data-value="Download" href="javascript:void(0);">Download</a>
-                                <a class="dropdown-item" data-value="Share" href="javascript:void(0);">Share</a>
-                            </div>
                         </div>
                     </li>
                 </ul>
@@ -586,14 +569,7 @@
             <div class="layout-px-spacing">
                 {{$slot}}
             </div>
-            <div class="footer-wrapper">
-                <div class="footer-section f-section-1">
-                    <p class="">Copyright © 2020 <a target="_blank" href="https://designreset.com/">DesignReset</a>, All rights reserved.</p>
-                </div>
-                <div class="footer-section f-section-2">
-                    <p class="">Coded with <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></p>
-                </div>
-            </div>
+            
         </div>
 
     </div>
@@ -603,7 +579,7 @@
     <script src="{{ asset('assets/js/libs/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('bootstrap/js/popper.min.js') }}"></script>
     <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+    <!-- <script src="{{ asset('plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script> -->
     <script src="{{ asset('assets/js/app.js') }}"></script>
     <script>
         $(document).ready(function() {
@@ -611,12 +587,5 @@
         });
     </script>
     <script src="{{ asset('assets/js/custom.js') }}"></script>
-    <!-- END GLOBAL MANDATORY SCRIPTS -->
-
-    <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
-    <script src="{{ asset('plugins/apex/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('assets/js/dashboard/dash_1.js') }}"></script>
-
-
-
+    <!-- <script src="{{ asset('assets/js/dashboard/dash_1.js') }}"></script> -->
 </html>

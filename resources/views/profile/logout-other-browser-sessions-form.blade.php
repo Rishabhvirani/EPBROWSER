@@ -71,6 +71,7 @@
                                 x-ref="password"
                                 wire:model.defer="password"
                                 wire:keydown.enter="logoutOtherBrowserSessions" />
+
                     <x-jet-input-error for="password" class="mt-2" />
                 </div>
             </x-slot>
