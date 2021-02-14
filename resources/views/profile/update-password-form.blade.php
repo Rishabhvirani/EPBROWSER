@@ -2,11 +2,9 @@
     <x-slot name="title">
         {{ __('Update Password') }}
     </x-slot>
-
     <x-slot name="description">
         {{ __('Ensure your account is using a long, random password to stay secure.') }}
     </x-slot>
-
     <x-slot name="form">
         <div class="form-group row mb-4">
             <x-jet-label for="current_password" value="{{ __('Current Password') }}" />
@@ -29,12 +27,10 @@
             <x-jet-input-error for="password_confirmation" class="mt-2" />
         </div>
     </x-slot>
-
     <x-slot name="actions">
         <x-jet-action-message class="mr-3" on="saved">
             {{ __('Saved.') }}
         </x-jet-action-message>
-
         <x-jet-button>
             {{ __('Save') }}
         </x-jet-button>

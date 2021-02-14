@@ -24,7 +24,6 @@
         <link href="{{ asset('plugins/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ asset('assets/css/dashboard/dash_1.css') }}" rel="stylesheet" type="text/css" />
     </head>
-
     <body>
         <div id="load_screen"> 
             <div class="loader"> 
@@ -55,8 +54,6 @@
     <div class="main-container" id="container">
         <div class="overlay"></div>
         <div class="search-overlay"></div>
-
-
         <div class="sidebar-wrapper sidebar-theme">
             <nav id="sidebar">
                 <div class="shadow-bottom"></div>
@@ -569,9 +566,7 @@
             <div class="layout-px-spacing">
                 {{$slot}}
             </div>
-            
         </div>
-
     </div>
         @stack('modals')
         @livewireScripts
