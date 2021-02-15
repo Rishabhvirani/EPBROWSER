@@ -27,10 +27,7 @@
                 </div>
 
                 <x-jet-section-border />
-            @endif
-
-
-            
+            @endif            
         </div>
     </div>
 </x-app-layout>
