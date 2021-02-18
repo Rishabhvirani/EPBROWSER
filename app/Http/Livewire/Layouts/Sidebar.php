@@ -10,4 +10,10 @@ class Sidebar extends Component
     {
         return view('livewire.layouts.sidebar');
     }
+    
+    public function navigate($page='dashboard'){
+        return view("livewire.module.$page");
+    }
+
+
 }

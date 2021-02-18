@@ -1,7 +1,8 @@
 <?php
 
+// namespace App\Http\Livewire\Module;
 use Illuminate\Support\Facades\Route;
-use App\Http\Livewire\Module\Users;
+// use App\Http\Livewire\Module\Users;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,19 +18,8 @@ use App\Http\Livewire\Module\Users;
 Route::get('/', function () {
     return redirect('/login');
 });
-
-// Route::get('/login',function(){
-//     return redirect('/');
-// })->name('login');
-
-Route::get('/users',Users::class);
-
-// Route::middleware(['auth:sanctum', 'verified'])->get('/login', function () {
-//     return redirect('/dashboard');
-// })->name('dashboard');
-// Route::middleware(['auth:sanctum', 'verified'])->get('/', function () {
-//     return redirect('/dashboard');
-// })->name('dashboard');
+// Route::get('/users',Users::class)->name('Users');
+Route::middleware(['auth:sanctum', 'verified'])->get('/users', Users.index)->name('Users');
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');

@@ -5,13 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>{{ config('app.name', 'Laravel') }}</title>
-        <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
-        <!-- Styles -->
-        <!-- <link rel="stylesheet" href="{{ mix('css/app.css') }}"> -->
         @livewireStyles
-        <!-- Scripts -->
-        <!-- <script src="{{ mix('js/app.js') }}" defer></script> -->
         <link href="{{ asset('assets/css/loader.css') }}" rel="stylesheet" type="text/css" />
         <script src="{{ asset('assets/js/loader.js') }}"></script>
         <!-- BEGIN GLOBAL MANDATORY STYLES -->
@@ -21,7 +16,7 @@
         <!-- END GLOBAL MANDATORY STYLES -->
 
         <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
-        <link href="{{ asset('plugins/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
+        <!-- <link href="{{ asset('plugins/apex/apexcharts.css') }}" rel="stylesheet" type="text/css"> -->
         <link href="{{ asset('assets/css/dashboard/dash_1.css') }}" rel="stylesheet" type="text/css" />
     </head>
     <body>
@@ -42,7 +37,7 @@
                             <nav class="breadcrumb-one" aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page"><span>Sales</span></li>
+                                    <li class="breadcrumb-item active" aria-current="page"><span></span></li>
                                 </ol>
                             </nav>
                         </div>
@@ -59,7 +54,9 @@
         </div>
         <div id="content" class="main-content">
             <div class="layout-px-spacing">
-                {{$slot}}
+                <div class="container">
+                    {{$slot}}
+                </div>
             </div>
         </div>
     </div>
@@ -77,5 +74,4 @@
         });
     </script>
     <script src="{{ asset('assets/js/custom.js') }}"></script>
-    <!-- <script src="{{ asset('assets/js/dashboard/dash_1.js') }}"></script> -->
 </html>

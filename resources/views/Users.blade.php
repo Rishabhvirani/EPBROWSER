@@ -1,4 +1,4 @@
 <x-app-layout>
-    Dashboard
+    Users
 </x-app-layout>
 
