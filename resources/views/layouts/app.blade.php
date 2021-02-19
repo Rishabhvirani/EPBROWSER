@@ -54,7 +54,7 @@
         </div>
         <div id="content" class="main-content">
             <div class="layout-px-spacing">
-                <div class="container">
+                <div class="container-fluid">
                     {{$slot}}
                 </div>
             </div>

@@ -15,9 +15,8 @@ class CreateTblUsersTable extends Migration
     {
         Schema::create('tbl_users', function (Blueprint $table) {
             $table->id('u_id')->unsigned();
-            $table->string('name');
-            $table->string('username', 15)->unique();
-            $table->string('email')->unique();
+            $table->string('username', 25)->unique();
+            $table->string('email',40)->unique();
             $table->string('password');
             $table->string('mobile')->unique();
             $table->text('profile_photo_path')->nullable();
@@ -30,9 +29,9 @@ class CreateTblUsersTable extends Migration
             $table->decimal('points', 8, 2);
             $table->decimal('coins', 8, 2);
             $table->enum('status', ['0', '1'],'0 - Active, 1 - Deleted')->default('0');
-            $table->integer('ref_id')->unsigned();
-            $table->string('ref_code', 15)->unique();
-            $table->string('country', 15);
+            $table->integer('ref_id')->unsigned()->nullable();
+            $table->string('ref_code', 15)->unique()->nullable();
+            $table->string('country', 4)->nullable();
             $table->string('api_token');
             $table->softDeletes();	
             $table->timestamps();
