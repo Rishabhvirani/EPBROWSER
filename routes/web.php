@@ -3,6 +3,8 @@
 // namespace App\Http\Livewire\Module;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Module\Users;
+use Illuminate\Http\Request;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,8 @@ use App\Http\Livewire\Module\Users;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/userss','UsersController@index' );
 
 Route::get('/', function () {
     return redirect('/login');

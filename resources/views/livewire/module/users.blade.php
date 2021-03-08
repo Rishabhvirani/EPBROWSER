@@ -10,7 +10,7 @@
                     </div>
                 </div>
                 <div class="widget-content widget-content-area">
-                    <form  wire:submit.prevent="submit">
+                    <form  wire:submit.prevent="register">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">

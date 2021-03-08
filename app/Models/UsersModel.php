@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
 
-class Users extends Model
+class UsersModel extends Model
 {
     use HasFactory;
     protected $table = 'tbl_users';
@@ -26,8 +27,11 @@ class Users extends Model
         'api_token',
         'verification_code',
     ];
-
-
+ 
     
+    public function modify_api_token(){
+        
+    }
+
 
 }
