@@ -17,6 +17,11 @@ use App\Http\Livewire\Module\Users;
 */
 
 // Route::get('/registerr',[UsersController::class,'register']);
+
+
+Route::middleware('auth:api')->get('/hello',function (){
+    return "hello";
+});
 Route::post('/register',[Users::class,'register']);
 Route::post('/login',[Users::class,'login']);
 

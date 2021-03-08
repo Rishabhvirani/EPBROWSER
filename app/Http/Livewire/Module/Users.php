@@ -40,11 +40,8 @@ class Users extends Component
 
     public function register(Request $request){
         $userModel =  new UsersModel;
-
         $response = array('response' => '', 'success'=>false);
-
-
-
+        
         if( $request->is('api/*')){
             $data = $request->json()->all();
             $validator = Validator::make($data, $this->rules);
@@ -139,14 +136,17 @@ class Users extends Component
                 return redirect('/');
 
         }
-
-        
         
     }
 
     public function login(){
         
     }
+
+    public function hello(){
+        return "asd";
+    }
+
 
 
 }
