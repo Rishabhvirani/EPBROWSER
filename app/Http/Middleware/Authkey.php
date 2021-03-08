@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Middleware;
-
 use Closure;
 use Illuminate\Http\Request;
+use \App\Models\UsersModel;
 
 class Authkey
 {
@@ -16,15 +16,10 @@ class Authkey
      */
     public function handle(Request $request, Closure $next)
     {
-        
-        if( $request->is('api/register')){
-            return $next($request);
-        }
-        $token = $request->header('token');
-        print_R($token);
-    
 
-        if($token != 'token'){
+        $token = $request->header('token');
+        $count = UsersModel::where('api_token', $token)->count();
+        if($count == 0){
             return response()->json(['message'=>'token issue']);
         }
         return $next($request);

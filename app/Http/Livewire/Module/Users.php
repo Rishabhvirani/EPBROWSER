@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Livewire\Module;
 use App\Models\UsersModel;
 use Livewire\Component;
@@ -7,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+
 
 
 
@@ -32,6 +32,10 @@ class Users extends Component
         'ref_code'=>'required|unique:tbl_users',
         'coin_address'=>'required|unique:tbl_users',
     ];
+
+    
+
+
 
     public function render()
     {
@@ -139,12 +143,14 @@ class Users extends Component
         
     }
 
-    public function login(){
-        
+    public function login(Request $request){
+        if( $request->is('api/*')){
+
+        }
     }
 
     public function hello(){
-        return "asd";
+        return "";
     }
 
 

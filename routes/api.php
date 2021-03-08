@@ -1,6 +1,4 @@
 <?php
-
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Module\Users;
 
@@ -19,11 +17,20 @@ use App\Http\Livewire\Module\Users;
 // Route::get('/registerr',[UsersController::class,'register']);
 
 
-Route::middleware('auth:api')->get('/hello',function (){
-    return "hello";
+
+Route::prefix('')->group(function () {
+    Route::middleware(['AuthKey'])->group(function () {
+        Route::get('/hello',[Users::class,'hello']);
+    });
+    Route::post('/register',[Users::class,'register']);
+    Route::post('/login',[Users::class,'login']);    
 });
-Route::post('/register',[Users::class,'register']);
-Route::post('/login',[Users::class,'login']);
+
+
+
+
+
+
 
 
 Route::get('/details',function(){
