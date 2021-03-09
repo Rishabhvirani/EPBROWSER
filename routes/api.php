@@ -19,7 +19,7 @@ use App\Http\Livewire\Module\Users;
 
 
 Route::prefix('')->group(function () {
-    Route::middleware(['AuthKey'])->group(function () {
+    Route::middleware(['Authkey'])->group(function () {
         Route::get('/hello',[Users::class,'hello']);
     });
     Route::post('/register',[Users::class,'register']);

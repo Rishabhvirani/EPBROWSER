@@ -50,7 +50,7 @@ class Users extends Component
             $data = $request->json()->all();
             $validator = Validator::make($data, $this->rules);
             if ($validator->passes()) {
-                $userModel->username = $data['username'];
+                $userModel->username = strtolower($data['username']);
                 $userModel->email = $data['email'];
                 $userModel->password = Hash::make($data['password']);
                 $userModel->mobile = $data['mobile'];
@@ -69,6 +69,14 @@ class Users extends Component
                         'message'=>'User Created Successfully',
                         'data'=> array(
                             'id'=>$userModel->u_id,
+                            'username'=>$userModel->username,
+                            'email'=>$userModel->email,
+                            'mobile'=>$userModel->mobile,
+                            'points'=>$userModel->points,
+                            'coins'=>$userModel->coins,
+                            'ref_code'=>$userModel->ref_code,
+                            'country'=>$userModel->country,
+                            'coin_address'=>$userModel->coin_address,
                             'api_token'=>$userModel->api_token,
                         )
                     );
@@ -76,39 +84,10 @@ class Users extends Component
                 }else{
                     return response($response);
                 }
-
-
-
             } else {
                 $response['response'] = $validator->errors()->messages();
                 return response()->json($response);
             }
-
-
-
-
-
-            // $user=[
-            //     'username' => $data['username'],
-            //     'email' => $data['email'],
-            //     'password' => Hash::make($data['password']),
-            //     'mobile'=>$data['mobile'],
-            //     'coin_address'=>$data['coin_address'],
-            //     'points'=>$data['point'],
-            //     'coins'=>$data['coin'],
-            //     'ref_code'=>$data['ref_code'],
-            //     'ref_id'=>isset($data['ref_id'])?$data['ref_id']:NULL,
-            //     'country'=>isset($data['country'])?$data['country']:NULL,
-            //     'api_token'=>Str::random(60),
-            //     'verification_code'=>Str::random(80),
-                
-            // ];
-            // if($this->user::create($user)){
-            //     $response['success']=true;
-            //     return response($response);
-            // }else{
-
-            // }
         }else{
             $data = $this->validate([
                 'username' => 'required|alpha_dash|unique:tbl_users',
@@ -121,31 +100,50 @@ class Users extends Component
                 'ref_code'=>'required|unique:tbl_users',
                 'coin_address'=>'required|unique:tbl_users',
             ]);
-            
-                $this->user::create([
-                    'username' => $data['username'],
-                    'email' => $data['email'],
-                    'password' => Hash::make($data['password']),
-                    'mobile'=>$data['mobile'],
-                    'coin_address'=>$data['coin_address'],
-                    'points'=>$data['point'],
-                    'coins'=>$data['coin'],
-                    'ref_code'=>$data['ref_code'],
-                    'ref_id'=>isset($data['ref_id'])?$data['ref_id']:NULL,
-                    'country'=>isset($data['country'])?$data['country']:NULL,
-                    'api_token'=>Str::random(60),
-                    'verification_code'=>Str::random(80),
-                    ]
-                );
-                return redirect('/');
-
+            $this->user::create([
+                'username' => strtolower($data['username']),
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'mobile'=>$data['mobile'],
+                'coin_address'=>$data['coin_address'],
+                'points'=>$data['point'],
+                'coins'=>$data['coin'],
+                'ref_code'=>$data['ref_code'],
+                'ref_id'=>isset($data['ref_id'])?$data['ref_id']:NULL,
+                'country'=>isset($data['country'])?$data['country']:NULL,
+                'api_token'=>Str::random(60),
+                'verification_code'=>Str::random(80),
+                ]
+            );
+            return redirect('/');
         }
         
     }
 
     public function login(Request $request){
         if( $request->is('api/*')){
-
+            
+            $username = $request->input('username');
+            $password = $request->input('password');
+            $user = UsersModel::where('username', '=', $username)->first();
+            if (!$user) {
+               return response()->json(['success'=>false, 'message' => 'Login Fail, please check username']);
+            }
+            if (!Hash::check($password, $user->password)) {
+               return response()->json(['success'=>false, 'message' => 'Login Fail, pls check password']);
+            }
+            return response()->json(['success'=>true,'message'=>'success', 'data' => array(
+                'id'=>$user->u_id,
+                'username'=>$user->username,
+                'email'=>$user->email,
+                'mobile'=>$user->mobile,
+                'points'=>$user->points,
+                'coins'=>$user->coins,
+                'ref_code'=>$user->ref_code,
+                'country'=>$user->country,
+                'coin_address'=>$user->coin_address,
+                'api_token'=>$user->api_token,
+            )]);   
         }
     }
 

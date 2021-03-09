@@ -17,11 +17,16 @@ class Authkey
     public function handle(Request $request, Closure $next)
     {
 
-        $token = $request->header('token');
-        $count = UsersModel::where('api_token', $token)->count();
-        if($count == 0){
-            return response()->json(['message'=>'token issue']);
+        if( $request->is('api/register') || $request->is('api/login')){
+            return $next($request);
         }
+        $token = $request->header('token');
+            $count = UsersModel::where('api_token', $token)->count();
+            if($count == 0){
+                return response()->json(['message'=>'token issue']);
+            }
+
+        
         return $next($request);
     }
 }
