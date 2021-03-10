@@ -18,12 +18,14 @@ use App\Http\Livewire\Module\Users;
 
 
 
-Route::prefix('')->group(function () {
-    Route::middleware(['Authkey'])->group(function () {
-        Route::get('/hello',[Users::class,'hello']);
+Route::prefix('users')->group(function () {
+    Route::middleware(['AuthKey'])->group(function () {
+        Route::post('/logout',[Users::class,'logout']);    
     });
     Route::post('/register',[Users::class,'register']);
     Route::post('/login',[Users::class,'login']);    
+    Route::post('/forgot_password',[Users::class,'forgot_password']);     
+    Route::post('/password_reset',[Users::class,'password_reset']);    
 });
 
 

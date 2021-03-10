@@ -33,9 +33,6 @@ class Users extends Component
         'coin_address'=>'required|unique:tbl_users',
     ];
 
-    
-
-
 
     public function render()
     {
@@ -45,7 +42,6 @@ class Users extends Component
     public function register(Request $request){
         $userModel =  new UsersModel;
         $response = array('response' => '', 'success'=>false);
-        
         if( $request->is('api/*')){
             $data = $request->json()->all();
             $validator = Validator::make($data, $this->rules);
@@ -115,14 +111,13 @@ class Users extends Component
                 'verification_code'=>Str::random(80),
                 ]
             );
-            return redirect('/');
+            return redirect('/users');
         }
         
     }
 
     public function login(Request $request){
         if( $request->is('api/*')){
-            
             $username = $request->input('username');
             $password = $request->input('password');
             $user = UsersModel::where('username', '=', $username)->first();
@@ -147,10 +142,38 @@ class Users extends Component
         }
     }
 
-    public function hello(){
-        return "";
+    public function logout(Request $request){
+        if( $request->is('api/*')){
+            $response = array('response' => 'something went wrong', 'success'=>false);
+            $user['user_id'] = $request->json()->all();
+            if($user['user_id'] == '' || !isset($user['user_id'])){
+                return response()->json($response);
+            }
+            if(UsersModel::where('u_id', $user['user_id'])->update(['api_token'=>Str::random(60)])){
+                return response()->json(['response'=>'Logout Successfully','success'=>true]);
+            }   
+        }
     }
 
+    public function referal_verify(){
+
+    }
+
+
+    public function update_profile(){
+
+    }
+    public function forgot_password(Request $request){
+        if( $request->is('api/*')){
+            $response = array('response' => 'something went wrong', 'success'=>false);
+            $data = $request->json()->all();
+            dd($data);
+        }
+    }
+
+    public function password_reset(Request $request){
+        
+    }
 
 
 }

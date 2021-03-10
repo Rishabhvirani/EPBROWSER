@@ -16,17 +16,20 @@ class Authkey
      */
     public function handle(Request $request, Closure $next)
     {
-
-        if( $request->is('api/register') || $request->is('api/login')){
-            return $next($request);
-        }
-        $token = $request->header('token');
+        $slug = request()->segment(count(request()->segments())-1) ."/". request()->segment(count(request()->segments()));
+        $except = array(
+            'users/register',
+            'users/login',
+            'users/forgot_password',
+            'users/password_reset',
+        );
+        if(!in_array($slug,$except)){
+            $token = $request->header('token');
             $count = UsersModel::where('api_token', $token)->count();
             if($count == 0){
                 return response()->json(['message'=>'token issue']);
             }
-
-        
+        }
         return $next($request);
     }
 }
