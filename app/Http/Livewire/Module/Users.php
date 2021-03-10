@@ -100,7 +100,7 @@ class Users extends Component
                 'ref_code'=>'required|unique:tbl_users',
                 'coin_address'=>'required|unique:tbl_users',
             ]);
-            $this->user::create([
+            $userModel::create([
                 'username' => strtolower($data['username']),
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
