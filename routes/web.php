@@ -17,7 +17,10 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/userss','UsersController@index' );
+
+
+
+Route::get('/verify_email/{id}',[Users::class,'verify_email']);
 
 Route::get('/', function () {
     return redirect('/login');

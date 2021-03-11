@@ -13,13 +13,12 @@ class AlterTblUsers extends Migration
      */
     public function up()
     {
-        //
         Schema::table('tbl_users', function (Blueprint $table) {
-            $table->string('password_reset_token');
-            $table->string('device_id');
-            $table->string('lat_long');
+            $table->string('password_reset_token')->after('api_token');
+            $table->string('device_id')->after('password_reset_token');
+            $table->string('lat')->after('device_id');
+            $table->string('long')->after('device_id');
         });
-
     }
 
     /**

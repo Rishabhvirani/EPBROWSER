@@ -62,6 +62,7 @@
                             @endif
                         </div>
                         <div class="text-right">
+                            <button type="button" wire:click="send_mail" class="btn btn-primary mt-3">send mail</button>
                             <button type="submit" class="btn btn-primary mt-3">Submit</button>
                         </div>
                     </form>
@@ -70,3 +71,4 @@
         </div>
     </div>
 </div>
+

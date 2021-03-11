@@ -20,7 +20,7 @@ class Authkey
         $except = array(
             'users/register',
             'users/login',
-            'users/forgot_password',
+            'users/get_reset_token',
             'users/password_reset',
         );
         if(!in_array($slug,$except)){

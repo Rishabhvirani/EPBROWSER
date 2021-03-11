@@ -6,6 +6,11 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Mail\OrderShipped;
+use App\Mail\VerifyEmail;
+use Illuminate\Support\Facades\Mail;
+
+
 
 
 
@@ -33,7 +38,6 @@ class Users extends Component
         'coin_address'=>'required|unique:tbl_users',
     ];
 
-
     public function render()
     {
         return view('livewire.module.users');
@@ -58,8 +62,8 @@ class Users extends Component
                 $userModel->country = isset($data['country'])?$data['country']:NULL;
                 $userModel->api_token = Str::random(60);
                 $userModel->verification_code = Str::random(80);
-
                 if($userModel->save()){
+                    $this->send_email_verification($userModel->email,$userModel->verification_code);
                     $response['success']=true;
                     $response['response']=array(
                         'message'=>'User Created Successfully',
@@ -74,6 +78,7 @@ class Users extends Component
                             'country'=>$userModel->country,
                             'coin_address'=>$userModel->coin_address,
                             'api_token'=>$userModel->api_token,
+                            'email_verified'=>$userModel->email_verified,
                         )
                     );
                     return response($response);
@@ -111,9 +116,9 @@ class Users extends Component
                 'verification_code'=>Str::random(80),
                 ]
             );
+            
             return redirect('/users');
-        }
-        
+        }   
     }
 
     public function login(Request $request){
@@ -127,7 +132,7 @@ class Users extends Component
             if (!Hash::check($password, $user->password)) {
                return response()->json(['success'=>false, 'message' => 'Login Fail, pls check password']);
             }
-            return response()->json(['success'=>true,'message'=>'success', 'data' => array(
+            return response()->json(['success'=>true,'message'=>'Login Successfully', 'data' => array(
                 'id'=>$user->u_id,
                 'username'=>$user->username,
                 'email'=>$user->email,
@@ -138,6 +143,7 @@ class Users extends Component
                 'country'=>$user->country,
                 'coin_address'=>$user->coin_address,
                 'api_token'=>$user->api_token,
+                'email_verified'=>$user->email_verified,
             )]);   
         }
     }
@@ -159,21 +165,51 @@ class Users extends Component
 
     }
 
-
     public function update_profile(){
-
+        
     }
-    public function forgot_password(Request $request){
+
+    public function get_reset_token(Request $request){
         if( $request->is('api/*')){
             $response = array('response' => 'something went wrong', 'success'=>false);
             $data = $request->json()->all();
-            dd($data);
+            $countUser = UsersModel::where('email',$data['email'])->count();
+            if($countUser == 0){
+                $response['response']="Email address Doesn't Exist";
+                $response['success']=true;
+                return response()->json($response);
+            }   
+            $password_reset_token = str::random(60);
+            $users = UsersModel::where('email',$data['email'])->update(['password_reset_token'=>$password_reset_token]);
+            if($users){
+                $response = array('response'=>array(
+                    'password_reset_token'=>$password_reset_token,
+                ));
+                return response()->json($response);
+            }
         }
     }
 
-    public function password_reset(Request $request){
-        
+    public function send_email_verification($email,$verification){
+        Mail::to($email)->send(new VerifyEmail($verification));
     }
+
+    public function verify_email(){
+        $slug = request()->segment(count(request()->segments()));
+        UsersModel::where('verification_code',$slug)->update(['email_verified'=>'1']);
+        return view('template.EmailVerified');
+    }
+
+
+
+
+    // public function password_reset(Request $request){
+    //     if($request->is('api/*')){
+    //         $data = $request->json()->all();
+    //         $user = UsersModel::where('password_reset_token',$data['reset_token'])->first();
+    //         dd($user);
+    //     }
+    // }
 
 
 }

@@ -24,7 +24,7 @@ Route::prefix('users')->group(function () {
     });
     Route::post('/register',[Users::class,'register']);
     Route::post('/login',[Users::class,'login']);    
-    Route::post('/forgot_password',[Users::class,'forgot_password']);     
+    Route::post('/get_reset_token',[Users::class,'get_reset_token']);     
     Route::post('/password_reset',[Users::class,'password_reset']);    
 });
 
