@@ -6,14 +6,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Mail\OrderShipped;
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
-
-
-
-
-
 
 class Users extends Component
 {
@@ -32,10 +26,11 @@ class Users extends Component
         'email' => 'required|email|unique:tbl_users',
         'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
         'mobile' => 'required|integer|unique:tbl_users',
-        'point' => 'required|integer',
-        'coin' => 'required|integer',
-        'ref_code'=>'required|unique:tbl_users',
-        'coin_address'=>'required|unique:tbl_users',
+        'mobile_verified'=>'required',
+        'country'=>'required',
+        'device_id'=>'required|unique:tbl_users',
+        'lat'=>'required',
+        'long'=>'required',
     ];
 
     public function render()
@@ -45,40 +40,31 @@ class Users extends Component
 
     public function register(Request $request){
         $userModel =  new UsersModel;
-        $response = array('response' => '', 'success'=>false);
+        $response = array('response' => '','success'=>false);
         if( $request->is('api/*')){
             $data = $request->json()->all();
             $validator = Validator::make($data, $this->rules);
             if ($validator->passes()) {
-                $userModel->username = strtolower($data['username']);
-                $userModel->email = $data['email'];
-                $userModel->password = Hash::make($data['password']);
-                $userModel->mobile = $data['mobile'];
-                $userModel->coin_address = $data['coin_address'];
-                $userModel->points = $data['point'];
-                $userModel->coins = $data['coin'];
-                $userModel->ref_code = $data['ref_code'];
-                $userModel->ref_id = isset($data['ref_id'])?$data['ref_id']:NULL;
-                $userModel->country = isset($data['country'])?$data['country']:NULL;
-                $userModel->api_token = Str::random(60);
-                $userModel->verification_code = Str::random(80);
-                if($userModel->save()){
-                    $this->send_email_verification($userModel->email,$userModel->verification_code);
+                $user = $userModel->Prepare_User($data);
+                // dd($user);
+                $user = UsersModel::create($user);
+                if($user){
+                    // $this->send_email_verification($user->email,$user->verification_code);
                     $response['success']=true;
                     $response['response']=array(
                         'message'=>'User Created Successfully',
                         'data'=> array(
-                            'id'=>$userModel->u_id,
-                            'username'=>$userModel->username,
-                            'email'=>$userModel->email,
-                            'mobile'=>$userModel->mobile,
-                            'points'=>$userModel->points,
-                            'coins'=>$userModel->coins,
-                            'ref_code'=>$userModel->ref_code,
-                            'country'=>$userModel->country,
-                            'coin_address'=>$userModel->coin_address,
-                            'api_token'=>$userModel->api_token,
-                            'email_verified'=>$userModel->email_verified,
+                            'id'=>$user->u_id,
+                            'username'=>$user->username,
+                            'email'=>$user->email,
+                            'mobile'=>$user->mobile,
+                            'points'=>$user->points,
+                            'coins'=>$user->coins,
+                            'ref_code'=>$user->ref_code,
+                            'country'=>$user->country,
+                            'coin_address'=>$user->coin_address,
+                            'api_token'=>$user->api_token,
+                            'email_verified'=>$user->email_verified,
                         )
                     );
                     return response($response);
@@ -101,6 +87,7 @@ class Users extends Component
                 'ref_code'=>'required|unique:tbl_users',
                 'coin_address'=>'required|unique:tbl_users',
             ]);
+            
             $userModel::create([
                 'username' => strtolower($data['username']),
                 'email' => $data['email'],
@@ -190,6 +177,11 @@ class Users extends Component
         }
     }
 
+
+
+
+
+
     public function send_email_verification($email,$verification){
         Mail::to($email)->send(new VerifyEmail($verification));
     }
@@ -199,9 +191,6 @@ class Users extends Component
         UsersModel::where('verification_code',$slug)->update(['email_verified'=>'1']);
         return view('template.EmailVerified');
     }
-
-
-
 
     // public function password_reset(Request $request){
     //     if($request->is('api/*')){

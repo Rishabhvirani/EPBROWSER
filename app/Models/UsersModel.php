@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 
 
@@ -26,12 +27,48 @@ class UsersModel extends Model
         'country',
         'api_token',
         'verification_code',
+        'device_id',
+        'lat',
+        'long',
     ];
  
-    
-    public function modify_api_token(){
-        
+    // protected $fillable = [
+    //     'username',
+    //     'email',
+    //     'password',
+    //     'mobile',
+    //     'coin_address',
+    //     'points',
+    //     'coins',
+    //     'ref_id',
+    //     'ref_code',
+    //     'country',
+    //     'api_token',
+    //     'verification_code',
+    // ];
+
+
+    public function Prepare_User($user){
+
+        $data = array(
+            'username'=>strtolower($user['username']),
+            'email'=>$user['email'],
+            'password'=> Hash::make($user['password']),
+            'mobile'=>$user['mobile'],
+            'mobile_verified'=>$user['mobile_verified'],
+            'country'=>$user['country'],
+            'device_id'=>$user['device_id'],
+            'lat'=>$user['lat'],
+            'long'=>$user['long'],
+            'api_token'=>Str::random(60),
+            'verification_code'=>Str::random(80),
+            'ref_code'=>$user['username'],
+        );
+        return $data;
     }
 
+
+    
+    
 
 }
