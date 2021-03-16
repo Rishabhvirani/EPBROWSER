@@ -49,7 +49,7 @@ class Users extends Component
                 // dd($user);
                 $user = UsersModel::create($user);
                 if($user){
-                    // $this->send_email_verification($user->email,$user->verification_code);
+                    $this->send_email_verification($user->email,$user->verification_code);
                     $response['success']=true;
                     $response['response']=array(
                         'message'=>'User Created Successfully',
@@ -58,13 +58,13 @@ class Users extends Component
                             'username'=>$user->username,
                             'email'=>$user->email,
                             'mobile'=>$user->mobile,
-                            'points'=>$user->points,
-                            'coins'=>$user->coins,
+                            'points'=>$user->points == null ? "0" : $user->points,
+                            'coins'=>$user->coins == null ? "0" : $user->coins,
                             'ref_code'=>$user->ref_code,
                             'country'=>$user->country,
-                            'coin_address'=>$user->coin_address,
+                            'coin_address'=>$user->coin_address == null ? "" : $user->coin_address ,
                             'api_token'=>$user->api_token,
-                            'email_verified'=>$user->email_verified,
+                            'email_verified'=>$user->email_verified == null ? "0" : $user->email_verified,
                         )
                     );
                     return response($response);
@@ -103,7 +103,6 @@ class Users extends Component
                 'verification_code'=>Str::random(80),
                 ]
             );
-            
             return redirect('/users');
         }   
     }
