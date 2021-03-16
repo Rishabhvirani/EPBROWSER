@@ -32,8 +32,8 @@ class CreateTblUsersTable extends Migration
             $table->string('ref_code', 15)->unique()->nullable();
             $table->string('country', 4)->nullable();
             $table->string('api_token',90);
-            $table->string('lat',30)->nullable();
-            $table->string('long',30)->nullable();
+            $table->integer('lat',30)->nullable();
+            $table->integer('long',30)->nullable();
             $table->string('device_id',35);
             $table->enum('status', ['0', '1'],'0 - Active, 1 - Deleted')->default('0');
             $table->softDeletes();	
