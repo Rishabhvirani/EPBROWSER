@@ -21,11 +21,14 @@ use App\Http\Livewire\Module\Users;
 Route::prefix('users')->group(function () {
     Route::middleware(['AuthKey'])->group(function () {
         Route::post('/logout',[Users::class,'logout']);    
+        Route::post('/profile_update',[Users::class,'profile_update']);
+        Route::post('/update_password',[Users::class,'update_password']);
     });
     Route::post('/register',[Users::class,'register']);
     Route::post('/login',[Users::class,'login']);    
     Route::post('/get_reset_token',[Users::class,'get_reset_token']);     
     Route::post('/password_reset',[Users::class,'password_reset']);    
+    
 });
 
 

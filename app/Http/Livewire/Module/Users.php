@@ -31,6 +31,7 @@ class Users extends Component
         'device_id'=>'required|unique:tbl_users',
         'lat'=>'required',
         'long'=>'required',
+        'device_id'=>'required|unique:tbl_users',
     ];
 
     public function render()
@@ -46,7 +47,6 @@ class Users extends Component
             $validator = Validator::make($data, $this->rules);
             if ($validator->passes()) {
                 $user = $userModel->Prepare_User($data);
-                // dd($user);
                 $user = UsersModel::create($user);
                 if($user){
                     $this->send_email_verification($user->email,$user->verification_code);
@@ -147,39 +147,66 @@ class Users extends Component
         }
     }
 
-    public function referal_verify(){
 
-    }
-
-    public function update_profile(){
-        
-    }
-
-    public function get_reset_token(Request $request){
+    public function profile_update(Request $request){
         if( $request->is('api/*')){
-            $response = array('response' => 'something went wrong', 'success'=>false);
             $data = $request->json()->all();
-            $countUser = UsersModel::where('email',$data['email'])->count();
-            if($countUser == 0){
-                $response['response']="Email address Doesn't Exist";
-                $response['success']=true;
+            $id =  $data['user_id'];
+            $response = array('response' => 'something went wrong', 'success'=>false);
+            $rules = [
+                'username' => "required|alpha_dash|unique:tbl_users,username,$id,u_id",
+                'email' => "required|email|unique:tbl_users,email,$id,u_id",
+                'mobile' => "required|integer|unique:tbl_users,mobile,$id,u_id",
+                'mobile_verified'=>'required',
+                'country'=>'required',
+            ];
+            $validator = Validator::make($data, $rules);
+            if ($validator->passes()) {
+                unset($data['user_id']);
+                $data['ref_code'] = $data['username'];
+                UsersModel::where('u_id',$id)->update($data);
+                $response['response'] = 'User Updated Successfully';
+                $response['success'] = true;
                 return response()->json($response);
-            }   
-            $password_reset_token = str::random(60);
-            $users = UsersModel::where('email',$data['email'])->update(['password_reset_token'=>$password_reset_token]);
-            if($users){
-                $response = array('response'=>array(
-                    'password_reset_token'=>$password_reset_token,
-                ));
+            }else{
+                $response['response'] = $validator->errors()->messages();
                 return response()->json($response);
+            }
+        }        
+    }
+
+    public function update_password(Request $request){
+        if( $request->is('api/*')){
+            $data = $request->json()->all();
+            $user = UsersModel::where('u_id', '=', $data['user_id'])->first();
+            if (!$user) {
+               return response()->json(['success'=>false, 'message' => 'Something Went Wrong']);
+            }
+            if (!Hash::check($data['current_password'], $user->password)) {
+                return response()->json(['success'=>false, 'message' => "Password Doesn't Match"]);
+            }
+            else{
+                $rules = ['password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',];
+                $validator = Validator::make($data, $rules);
+
+                if ($validator->passes()) {
+                    if(UsersModel::where('u_id','=',$data['user_id'])->update(['password'=>Hash::make($data['password'])])){
+                        return response()->json(['success'=>true, 'message' => "Password Updated Successfully"]);
+                    }
+                    return response()->json(['success'=>false, 'message' => 'Something Went Wrong']);
+                }else{
+                    $response['response'] = $validator->errors()->messages();
+                    return response()->json($response);
+                }
             }
         }
     }
 
 
+    public function referesh_profile_data(Request $request){
 
-
-
+    }
+    
 
     public function send_email_verification($email,$verification){
         Mail::to($email)->send(new VerifyEmail($verification));
