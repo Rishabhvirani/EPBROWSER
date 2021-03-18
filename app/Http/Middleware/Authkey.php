@@ -27,7 +27,7 @@ class Authkey
             $token = $request->header('token');
             $count = UsersModel::where('api_token', $token)->count();
             if($count == 0){
-                return response()->json(['message'=>'token issue']);
+                return response()->json(['message'=>'Unauthorized Access']);
             }
             $user = UsersModel::where('api_token', $token)->first();
             $request->u_id = $user->u_id;

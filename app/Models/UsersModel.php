@@ -26,6 +26,7 @@ class UsersModel extends Model
         'ref_code',
         'country',
         'api_token',
+        'reset_token',
         'verification_code',
         'device_id',
         'lat',
@@ -61,6 +62,7 @@ class UsersModel extends Model
             'lat'=>$user['lat'],
             'long'=>$user['long'],
             'api_token'=>Str::random(60),
+            'reset_token'=>Str::random(60),
             'verification_code'=>Str::random(80),
             'ref_code'=>$user['username'],
         );

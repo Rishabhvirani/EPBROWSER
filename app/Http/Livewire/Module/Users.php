@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
+use PDO;
 
 class Users extends Component
 {
@@ -111,6 +112,10 @@ class Users extends Component
         if( $request->is('api/*')){
             $username = $request->input('username');
             $password = $request->input('password');
+            $device_id = $request->input('device_id');
+            if(!isset($device_id)){
+                return response()->json(['success'=>false, 'message' => 'Something Went Wrong']);
+            }
             $user = UsersModel::where('username', '=', $username)->first();
             if (!$user) {
                return response()->json(['success'=>false, 'message' => 'Login Fail, please check username']);
@@ -118,6 +123,15 @@ class Users extends Component
             if (!Hash::check($password, $user->password)) {
                return response()->json(['success'=>false, 'message' => 'Login Fail, pls check password']);
             }
+            if($user->user_banned == '1'){
+                return response()->json(['success'=>false, 'message' => 'Your Account has been banned by the Administrator']);
+            }
+            if($user->device_id != $device_id){
+                return response()->json(['success'=>false, 'message' => 'Please Log in Throught the registered Device']);
+            }
+
+            $user = $user->where('u_id', $user->u_id)->update(['api_token'=>Str::random(60)]);
+            $user = UsersModel::where('username', '=', $username)->first();
             return response()->json(['success'=>true,'message'=>'Login Successfully', 'data' => array(
                 'id'=>$user->u_id,
                 'username'=>$user->username,
@@ -137,21 +151,19 @@ class Users extends Component
     public function logout(Request $request){
         if( $request->is('api/*')){
             $response = array('response' => 'something went wrong', 'success'=>false);
-            $user['user_id'] = $request->json()->all();
-            if($user['user_id'] == '' || !isset($user['user_id'])){
+            if($request->u_id == '' || !isset($request->u_id)){
                 return response()->json($response);
             }
-            if(UsersModel::where('u_id', $user['user_id'])->update(['api_token'=>Str::random(60)])){
+            if(UsersModel::where('u_id', $request->u_id)->update(['api_token'=>Str::random(60)])){
                 return response()->json(['response'=>'Logout Successfully','success'=>true]);
             }   
         }
     }
 
-
     public function profile_update(Request $request){
         if( $request->is('api/*')){
             $data = $request->json()->all();
-            $id =  $data['user_id'];
+            $id =  $request->u_id;
             $response = array('response' => 'something went wrong', 'success'=>false);
             $rules = [
                 'username' => "required|alpha_dash|unique:tbl_users,username,$id,u_id",
@@ -162,7 +174,6 @@ class Users extends Component
             ];
             $validator = Validator::make($data, $rules);
             if ($validator->passes()) {
-                unset($data['user_id']);
                 $data['ref_code'] = $data['username'];
                 UsersModel::where('u_id',$id)->update($data);
                 $response['response'] = 'User Updated Successfully';
@@ -178,7 +189,7 @@ class Users extends Component
     public function update_password(Request $request){
         if( $request->is('api/*')){
             $data = $request->json()->all();
-            $user = UsersModel::where('u_id', '=', $data['user_id'])->first();
+            $user = UsersModel::where('u_id', '=', $request->u_id)->first();
             if (!$user) {
                return response()->json(['success'=>false, 'message' => 'Something Went Wrong']);
             }
@@ -188,9 +199,8 @@ class Users extends Component
             else{
                 $rules = ['password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',];
                 $validator = Validator::make($data, $rules);
-
                 if ($validator->passes()) {
-                    if(UsersModel::where('u_id','=',$data['user_id'])->update(['password'=>Hash::make($data['password'])])){
+                    if(UsersModel::where('u_id','=',$request->u_id)->update(['password'=>Hash::make($data['password'])])){
                         return response()->json(['success'=>true, 'message' => "Password Updated Successfully"]);
                     }
                     return response()->json(['success'=>false, 'message' => 'Something Went Wrong']);
@@ -201,7 +211,6 @@ class Users extends Component
             }
         }
     }
-
 
     public function referesh_profile_data(Request $request){
         $user = UsersModel::where('u_id','=',$request->u_id)->first();
@@ -222,7 +231,6 @@ class Users extends Component
         ];
         return response($data);
     }
-    
 
     public function send_email_verification($email,$verification){
         Mail::to($email)->send(new VerifyEmail($verification));
@@ -234,13 +242,35 @@ class Users extends Component
         return view('template.EmailVerified');
     }
 
-    // public function password_reset(Request $request){
-    //     if($request->is('api/*')){
-    //         $data = $request->json()->all();
-    //         $user = UsersModel::where('password_reset_token',$data['reset_token'])->first();
-    //         dd($user);
-    //     }
-    // }
+    public function get_reset_token(Request $request){
+        if( $request->is('api/*')){
+            $data = $request->json()->all();
+            $user = UsersModel::where(['mobile'=>$data['mobile'],'country'=>$data['country']])->first();
+            if(!$user){
+                return response()->json(['success'=>false, 'message' => 'Something Went Wrong']);
+            }
+            return response()->json(['success'=>true, 'data' => [
+                'reset_token' => $user->reset_token
+            ]]);
+        }
+    }
 
-
+    public function password_reset(Request $request){
+        if( $request->is('api/*')){
+            $data = $request->json()->all();
+            $user = UsersModel::where('reset_token',$data['reset_token'])->first();
+            $rules = ['password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',];
+            $validator = Validator::make($data, $rules);
+            if ($validator->passes()) {
+                if(UsersModel::where('u_id','=',$user->u_id)->update(['password'=>Hash::make($data['password'])])){
+                    return response()->json(['success'=>true, 'message' => "Password Updated Successfully"]);
+                }
+                return response()->json(['success'=>false, 'message' => 'Something Went Wrong']);
+            }else{
+                $response['response'] = $validator->errors()->messages();
+                return response()->json($response);
+            }
+        }
+    }
+    
 }
