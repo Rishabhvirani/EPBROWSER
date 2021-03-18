@@ -123,13 +123,13 @@ class Users extends Component
                 'username'=>$user->username,
                 'email'=>$user->email,
                 'mobile'=>$user->mobile,
-                'points'=>$user->points,
-                'coins'=>$user->coins,
+                'points'=>$user->points == null ? "0" : $user->points,
+                'coins'=>$user->coins == null ? "0" : $user->coins,
                 'ref_code'=>$user->ref_code,
                 'country'=>$user->country,
-                'coin_address'=>$user->coin_address,
+                'coin_address'=>$user->coin_address == null ? "" : $user->coin_address,
                 'api_token'=>$user->api_token,
-                'email_verified'=>$user->email_verified,
+                'email_verified'=>$user->email_verified == null ? "0" : $user->email_verified,
             )]);   
         }
     }
@@ -204,7 +204,23 @@ class Users extends Component
 
 
     public function referesh_profile_data(Request $request){
-
+        $user = UsersModel::where('u_id','=',$request->u_id)->first();
+        $data = [
+            'data' => [
+                'id'=>$user->u_id,
+                'username'=>$user->username,
+                'email'=>$user->email,
+                'mobile'=>$user->mobile,
+                'points'=>$user->points == null ? "0" : $user->points,
+                'coins'=>$user->coins == null ? "0" : $user->coins,
+                'ref_code'=>$user->ref_code,
+                'country'=>$user->country,
+                'coin_address'=>$user->coin_address == null ? "" : $user->coin_address,
+                'api_token'=>$user->api_token,
+                'email_verified'=>$user->email_verified == null ? "0" : $user->email_verified,
+            ]
+        ];
+        return response($data);
     }
     
 

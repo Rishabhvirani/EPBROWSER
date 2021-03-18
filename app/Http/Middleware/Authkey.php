@@ -29,6 +29,8 @@ class Authkey
             if($count == 0){
                 return response()->json(['message'=>'token issue']);
             }
+            $user = UsersModel::where('api_token', $token)->first();
+            $request->u_id = $user->u_id;
         }
         return $next($request);
     }

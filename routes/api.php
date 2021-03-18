@@ -23,6 +23,7 @@ Route::prefix('users')->group(function () {
         Route::post('/logout',[Users::class,'logout']);    
         Route::post('/profile_update',[Users::class,'profile_update']);
         Route::post('/update_password',[Users::class,'update_password']);
+        Route::post('/referesh_profile_data',[Users::class,'referesh_profile_data']);
     });
     Route::post('/register',[Users::class,'register']);
     Route::post('/login',[Users::class,'login']);    
