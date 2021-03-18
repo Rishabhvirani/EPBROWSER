@@ -259,6 +259,9 @@ class Users extends Component
         if( $request->is('api/*')){
             $data = $request->json()->all();
             $user = UsersModel::where('reset_token',$data['reset_token'])->first();
+            if(!isset($user)){
+                return response()->json(['success'=>false, 'message' => 'Something Went Wrong']);
+            }
             $rules = ['password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',];
             $validator = Validator::make($data, $rules);
             if ($validator->passes()) {
