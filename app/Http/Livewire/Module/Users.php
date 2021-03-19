@@ -277,7 +277,7 @@ class Users extends Component
     }
 
     public function truncate_users(){
-        if(UserModel::all()->delete()){
+        if(UsersModel::all()->delete()){
             return response()->json(['success'=>true, 'message' => 'all users deleted']);
         }
     }
