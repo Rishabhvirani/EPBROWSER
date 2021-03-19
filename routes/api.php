@@ -24,6 +24,7 @@ Route::prefix('users')->group(function () {
         Route::post('/profile_update',[Users::class,'profile_update']);
         Route::post('/update_password',[Users::class,'update_password']);
         Route::post('/referesh_profile_data',[Users::class,'referesh_profile_data']);
+        Route::post('/truncate_users',[Users::class,'truncate_users']);
     });
     Route::post('/register',[Users::class,'register']);
     Route::post('/login',[Users::class,'login']);    
