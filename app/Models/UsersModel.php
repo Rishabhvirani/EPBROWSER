@@ -64,7 +64,7 @@ class UsersModel extends Model
             'api_token'=>Str::random(60),
             'reset_token'=>Str::random(60),
             'verification_code'=>Str::random(80),
-            'ref_code'=>$user['username'],
+            'ref_code'=>strtolower($user['username']),
         );
         return $data;
     }
