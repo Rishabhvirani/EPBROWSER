@@ -29,10 +29,9 @@ class Users extends Component
         'mobile' => 'required|integer|unique:tbl_users',
         'mobile_verified'=>'required',
         'country'=>'required',
-        'device_id'=>'required|unique:tbl_users',
         'lat'=>'required',
         'long'=>'required',
-        'device_id'=>'required|unique:tbl_users',
+        // 'device_id'=>'required|unique:tbl_users',
     ];
 
     public function render()
@@ -126,9 +125,9 @@ class Users extends Component
             if($user->user_banned == '1'){
                 return response()->json(['success'=>false, 'message' => 'Your Account has been banned by the Administrator']);
             }
-            if($user->device_id != $device_id){
-                return response()->json(['success'=>false, 'message' => 'Please Log in Throught the registered Device']);
-            }
+            // if($user->device_id != $device_id){
+            //     return response()->json(['success'=>false, 'message' => 'Please Log in Throught the registered Device']);
+            // }
 
             $user = $user->where('u_id', $user->u_id)->update(['api_token'=>Str::random(60)]);
             $user = UsersModel::where('username', '=', $username)->first();
