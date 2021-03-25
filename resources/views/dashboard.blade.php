@@ -1,4 +1,4 @@
 <x-app-layout>
-    Dashboard
+    Dashboard hello
 </x-app-layout>
 
