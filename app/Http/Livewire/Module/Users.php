@@ -73,7 +73,7 @@ class Users extends Component
                 }
             } else {
                 
-                $response['response'] = $validator->errors()->messages();
+                // $response['response'] = $validator->errors()->messages();
                 $response['messages'] = $validator->errors()->first();
                 return response()->json($response);
             }
