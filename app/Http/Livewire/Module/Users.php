@@ -49,7 +49,7 @@ class Users extends Component
                 $user = $userModel->Prepare_User($data);
                 $user = UsersModel::create($user);
                 if($user){
-                    $this->send_email_verification($user->email,$user->verification_code);
+                    // $this->send_email_verification($user->email,$user->verification_code);
                     $response['success']=true;
                     $response['response']=array(
                         'message'=>'User Created Successfully',
@@ -74,7 +74,7 @@ class Users extends Component
             } else {
                 
                 $response['response'] = $validator->errors()->messages();
-                $response['messages'] = $validator->errors()->all();
+                $response['messages'] = $validator->errors()->first();
                 return response()->json($response);
             }
         }else{
