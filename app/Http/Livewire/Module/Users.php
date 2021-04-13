@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
-use PDO;
+
 
 class Users extends Component
 {
