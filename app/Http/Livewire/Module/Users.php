@@ -49,7 +49,7 @@ class Users extends Component
                 $user = $userModel->Prepare_User($data);
                 $user = UsersModel::create($user);
                 if($user){
-                    $this->send_email_verification($user->email,$user->verification_code);
+                    // $this->send_email_verification($user->email,$user->verification_code);
                     $response['success']=true;
                     $response['response']=array(
                         'message'=>'User Created Successfully',
@@ -72,7 +72,9 @@ class Users extends Component
                     return response($response);
                 }
             } else {
-                $response['response'] = $validator->errors()->messages();
+                
+                // $response['response'] = $validator->errors()->messages();
+                $response['messages'] = $validator->errors()->first();
                 return response()->json($response);
             }
         }else{
@@ -128,7 +130,6 @@ class Users extends Component
             // if($user->device_id != $device_id){
             //     return response()->json(['success'=>false, 'message' => 'Please Log in Throught the registered Device']);
             // }
-
             $user = $user->where('u_id', $user->u_id)->update(['api_token'=>Str::random(60)]);
             $user = UsersModel::where('username', '=', $username)->first();
             return response()->json(['success'=>true,'message'=>'Login Successfully', 'data' => array(
