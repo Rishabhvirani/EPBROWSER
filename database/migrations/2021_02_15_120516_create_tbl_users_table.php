@@ -28,7 +28,6 @@ class CreateTblUsersTable extends Migration
             $table->string('coin_address')->unique();
             $table->decimal('points', 8, 2);
             $table->decimal('coins', 8, 2);
-            $table->enum('status', ['0', '1'],'0 - Active, 1 - Deleted')->default('0');
             $table->integer('ref_id')->unsigned()->nullable();
             $table->string('ref_code', 15)->unique()->nullable();
             $table->string('country', 4)->nullable();
