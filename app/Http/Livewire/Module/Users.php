@@ -43,6 +43,8 @@ class Users extends Component
         $userModel =  new UsersModel;
         $response = array('response' => '','success'=>false);
         if( $request->is('api/*')){
+            $response = array('response' => '','success'=>false);
+
             $data = $request->json()->all();
             $validator = Validator::make($data, $this->rules);
             if ($validator->passes()) {
@@ -74,7 +76,8 @@ class Users extends Component
             } else {
                 
                 // $response['response'] = $validator->errors()->messages();
-                $response['messages'] = $validator->errors()->first();
+                unset($response['response']);
+                $response['message'] = $validator->errors()->first();
                 return response()->json($response);
             }
         }else{
