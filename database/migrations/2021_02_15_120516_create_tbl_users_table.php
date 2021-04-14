@@ -34,7 +34,7 @@ class CreateTblUsersTable extends Migration
             $table->string('api_token',90);
             $table->integer('lat',false, true)->length(30)->nullable();
             $table->integer('long',false, true)->length(30)->nullable();
-            $table->string('device_id',35);
+            $table->string('device_id',35)->nullable();
             $table->enum('status', ['0', '1'],'0 - Active, 1 - Deleted')->default('0');
             $table->softDeletes();	
             $table->timestamps();
