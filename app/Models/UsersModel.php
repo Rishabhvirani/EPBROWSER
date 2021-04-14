@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Hash;
 
 
 
@@ -28,9 +27,6 @@ class UsersModel extends Model
         'api_token',
         'reset_token',
         'verification_code',
-        'device_id',
-        'lat',
-        'long',
     ];
  
     // protected $fillable = [
@@ -69,8 +65,5 @@ class UsersModel extends Model
         return $data;
     }
 
-
-    
-    
 
 }

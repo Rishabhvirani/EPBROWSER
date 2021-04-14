@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Mail\OrderShipped;
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
 
@@ -41,7 +42,7 @@ class Users extends Component
 
     public function register(Request $request){
         $userModel =  new UsersModel;
-        $response = array('response' => '','success'=>false);
+        $response = array('response' => '', 'success'=>false);
         if( $request->is('api/*')){
             $response = array('response' => '','success'=>false);
 
@@ -92,7 +93,6 @@ class Users extends Component
                 'ref_code'=>'required|unique:tbl_users',
                 'coin_address'=>'required|unique:tbl_users',
             ]);
-            
             $userModel::create([
                 'username' => strtolower($data['username']),
                 'email' => $data['email'],
