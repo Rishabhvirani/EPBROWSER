@@ -27,6 +27,7 @@ class UsersModel extends Model
         'api_token',
         'reset_token',
         'verification_code',
+        'device_id',
     ];
  
     // protected $fillable = [
