@@ -44,10 +44,9 @@ class Users extends Component
 
     public function register(Request $request){
         $userModel =  new UsersModel;
-        $response = array('response' => '', 'success'=>false);
+        $response = array('success'=>false);
         if( $request->is('api/*')){
             $response = array('response' => '','success'=>false);
-
             $data = $request->json()->all();
             $validator = Validator::make($data, $this->rules);
             if ($validator->passes()) {
@@ -55,8 +54,9 @@ class Users extends Component
                 $user = UsersModel::create($user);
                 if($user){
                     // $this->send_email_verification($user->email,$user->verification_code);
-                    $response['success']=true;
-                    $response['response']=array(
+                    // $response['success']=true;
+                    $response=array(
+                        'success'=>true,
                         'message'=>'User Created Successfully',
                         'data'=> array(
                             'id'=>$user->u_id,
