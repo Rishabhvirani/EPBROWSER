@@ -34,12 +34,25 @@ class Users extends Component
         'country'=>'required',
         'lat'=>'required',
         'long'=>'required',
-        // 'device_id'=>'required|unique:tbl_users',
+        'device_id'=>'required|unique:tbl_users',
     ];
 
     public function render()
     {
         return view('livewire.module.users');
+    }
+
+    public function check_user_details(Request $request){
+        $data = $request->json()->all();
+        $validator = Validator::make($data, $this->rules);
+        if ($validator->passes()) {
+            $response['success'] = true;
+            return response()->json($response);
+        }else{
+            $response['message'] = $validator->errors()->first();
+            $response['success'] = false;
+            return response()->json($response);            
+        }
     }
 
     public function register(Request $request){
@@ -54,7 +67,6 @@ class Users extends Component
                 $user = UsersModel::create($user);
                 if($user){
                     // $this->send_email_verification($user->email,$user->verification_code);
-                    // $response['success']=true;
                     $response=array(
                         'success'=>true,
                         'message'=>'User Created Successfully',
@@ -177,6 +189,7 @@ class Users extends Component
                 'mobile_verified'=>'required',
                 'country'=>'required',
             ];
+            $data['ref_code'] = $data['username'];
             $validator = Validator::make($data, $rules);
             if ($validator->passes()) {
                 $data['ref_code'] = $data['username'];
