@@ -62,6 +62,7 @@ class UsersModel extends Model
             'reset_token'=>Str::random(60),
             'verification_code'=>Str::random(80),
             'ref_code'=>strtolower($user['username']),
+            'ref_id'=> isset($user['ref_id']) ? $user['ref_id'] : null,
         );
         return $data;
     }

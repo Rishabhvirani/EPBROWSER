@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Mail\OrderShipped;
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
+use App\Rules\Referal;
 
 
 
@@ -44,6 +45,8 @@ class Users extends Component
 
     public function check_user_details(Request $request){
         $data = $request->json()->all();
+        $this->rules['ref_code'] = [new Referal($data)];
+        // var_dump($this->rules);
         $validator = Validator::make($data, $this->rules);
         if ($validator->passes()) {
             $response['success'] = true;
@@ -61,12 +64,17 @@ class Users extends Component
         if( $request->is('api/*')){
             $response = array('response' => '','success'=>false);
             $data = $request->json()->all();
+            $this->rules['ref_code'] = [new Referal($data)];
             $validator = Validator::make($data, $this->rules);
             if ($validator->passes()) {
+                $ref_user =  UsersModel::where('ref_code','=',strtolower($data['ref_code']))->where('status','0')->first();
+                if(isset($ref_user->u_id)){
+                    $data['ref_id'] = $ref_user->u_id;
+                }
                 $user = $userModel->Prepare_User($data);
                 $user = UsersModel::create($user);
                 if($user){
-                    // $this->send_email_verification($user->email,$user->verification_code);
+                    $this->send_email_verification($user->email,$user->verification_code);
                     $response=array(
                         'success'=>true,
                         'message'=>'User Created Successfully',
