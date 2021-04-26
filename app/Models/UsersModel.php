@@ -31,7 +31,7 @@ class UsersModel extends Model
     ];
 
     public function Prepare_User($user){
-
+        
         $data = array(
             'username'=>strtolower($user['username']),
             'email'=>$user['email'],

@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Module\Users;
+use App\Http\Livewire\Module\Settings\Settings;
 
 
 /*
@@ -31,8 +32,14 @@ Route::prefix('users')->group(function () {
     Route::post('/login',[Users::class,'login']);    
     Route::post('/get_reset_token',[Users::class,'get_reset_token']);     
     Route::post('/password_reset',[Users::class,'password_reset']);    
-    
 });
+
+
+Route::prefix('settings')->group(function () {
+    Route::post('/get_settings',[Settings::class,'get_settings']);
+});
+
+
 
 
 

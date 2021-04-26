@@ -68,17 +68,19 @@ class Users extends Component
             $this->rules['ref_code'] = [new Referal($data)];
             $validator = Validator::make($data, $this->rules);
             if ($validator->passes()) {
-                $ref_user =  UsersModel::where('ref_code','=',strtolower($data['ref_code']))->where('status','0')->first();
-                if(isset($ref_user->u_id)){
-                    $data['ref_id'] = $ref_user->u_id;    
-                    $data['points'] = $ref_setting->childEarning;   
-                    UsersModel::where(array('u_id'=>$data['ref_id']))->update(['points' => DB::raw('points + '.$ref_setting->parentEarning)]);
+                if($ref_setting->isReferalActive == 1){   
+                    $ref_user =  UsersModel::where('ref_code','=',strtolower($data['ref_code']))->where('status','0')->first();
+                    if(isset($ref_user->u_id)){
+                        $data['ref_id'] = $ref_user->u_id;    
+                        $data['points'] = $ref_setting->childEarning;   
+                        UsersModel::where(array('u_id'=>$data['ref_id']))->update(['points' => DB::raw('points + '.$ref_setting->parentEarning)]);
+                    }
                 }
                 $user = $userModel->Prepare_User($data);
                 $user = UsersModel::create($user);
                 if($user){
                     // $this->send_email_verification($user->email,$user->verification_code);
-                    if(isset($ref_user->u_id)){
+                    if(isset($ref_user->u_id) && $ref_setting->isReferalActive == 1){
                         $this->insert_point_history($user->ref_id,$user->u_id);
                     }
                     $response=array(
@@ -143,7 +145,6 @@ class Users extends Component
         }   
     }
 
-
     public function insert_point_history($parent_user,$child_user){
         $settings =  new SettingsModel;
         $ref_setting = $settings->get_settings('referal');
@@ -162,7 +163,6 @@ class Users extends Component
             ));
             return true;
     }
-
 
     public function login(Request $request){
         if( $request->is('api/*')){

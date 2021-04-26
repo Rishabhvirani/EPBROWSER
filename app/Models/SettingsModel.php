@@ -20,6 +20,21 @@ class SettingsModel extends Model
             foreach($settings as $setting){
                 $return_setting[$setting['name']] = $setting['value'];
             }
+        }else{
+            $return_setting[$settings[0]['name']] = $settings[0]['value'];
+        }
+        return json_decode(json_encode($return_setting));
+    }
+
+    public function get_typewise_settings($type){
+        $settings = Model::where('type',$type)->get();
+        $return_setting;
+        if(count($settings) > 1){
+            foreach($settings as $setting){
+                $return_setting[$setting['name']] = $setting['value'];
+            }
+        }else{
+            $return_setting[$settings[0]['name']] = $settings[0]['value'];
         }
         return json_decode(json_encode($return_setting));
     }

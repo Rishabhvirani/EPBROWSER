@@ -23,7 +23,8 @@ class Authkey
             'users/get_reset_token',
             'users/password_reset',
             'users/truncate_users',
-            'users/check_user_details'
+            'users/check_user_details',
+            'settings/get_settings',
         );
         if(!in_array($slug,$except)){
             $token = $request->header('token');

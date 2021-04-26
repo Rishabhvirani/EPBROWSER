@@ -41,4 +41,7 @@ class Referal extends Component
         $this->mount();
         $this->dispatchBrowserEvent('alert', ['type' => 'success',  'message' => 'Referal Setting updated']);
     }
+
+    
+
 }
