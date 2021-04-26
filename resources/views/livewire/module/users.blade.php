@@ -14,7 +14,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <input type="text" class="form-control" id="username" name="username" wire:model="username"  placeholder="Username">
+                                    <input type="text" class="form-control" id="username" name="username" wire:model="username" placeholder="Username">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -62,7 +62,6 @@
                             @endif
                         </div>
                         <div class="text-right">
-                            <button type="button" wire:click="send_mail" class="btn btn-primary mt-3">send mail</button>
                             <button type="submit" class="btn btn-primary mt-3">Submit</button>
                         </div>
                     </form>

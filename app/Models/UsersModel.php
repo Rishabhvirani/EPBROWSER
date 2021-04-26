@@ -29,22 +29,6 @@ class UsersModel extends Model
         'verification_code',
         'device_id',
     ];
- 
-    // protected $fillable = [
-    //     'username',
-    //     'email',
-    //     'password',
-    //     'mobile',
-    //     'coin_address',
-    //     'points',
-    //     'coins',
-    //     'ref_id',
-    //     'ref_code',
-    //     'country',
-    //     'api_token',
-    //     'verification_code',
-    // ];
-
 
     public function Prepare_User($user){
 
@@ -61,11 +45,11 @@ class UsersModel extends Model
             'api_token'=>Str::random(60),
             'reset_token'=>Str::random(60),
             'verification_code'=>Str::random(80),
+            'points'=>isset($user['points']) ? $user['points'] : 0, 
             'ref_code'=>strtolower($user['username']),
             'ref_id'=> isset($user['ref_id']) ? $user['ref_id'] : null,
         );
         return $data;
     }
-
 
 }

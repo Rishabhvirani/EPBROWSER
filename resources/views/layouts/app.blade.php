@@ -9,15 +9,15 @@
         @livewireStyles
         <link href="{{ asset('assets/css/loader.css') }}" rel="stylesheet" type="text/css" />
         <script src="{{ asset('assets/js/loader.js') }}"></script>
-        <!-- BEGIN GLOBAL MANDATORY STYLES -->
+        
         <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
         <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/plugins.css') }}" rel="stylesheet" type="text/css" />
-        <!-- END GLOBAL MANDATORY STYLES -->
-
-        <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
-        <!-- <link href="{{ asset('plugins/apex/apexcharts.css') }}" rel="stylesheet" type="text/css"> -->
         <link href="{{ asset('assets/css/dashboard/dash_1.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('plugins/notification/snackbar/snackbar.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/css/components/tabs-accordian/custom-tabs.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/css/forms/switches.css') }}" rel="stylesheet" type="text/css" />
+        
     </head>
     <body>
         <div id="load_screen"> 
@@ -68,10 +68,23 @@
     <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/app.js') }}"></script>
+    <script src="{{ asset('plugins/notification/snackbar/snackbar.min.js') }}"></script>
+    <script src="{{ asset('assets/js/components/notification/custom-snackbar.js') }}"></script>
     <script>
         $(document).ready(function() {
             App.init();
         });
     </script>
     <script src="{{ asset('assets/js/custom.js') }}"></script>
+    <script>
+        window.addEventListener('alert', event => { 
+            Snackbar.show({
+                text: event.detail.message,
+                pos: 'bottom-right',
+                duration:5000,
+                actionTextColor: '#fff',
+                backgroundColor: '#8dbf42'
+            });
+        })
+    </script>
 </html>

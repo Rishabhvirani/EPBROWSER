@@ -6,14 +6,14 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Mail\OrderShipped;
+use App\Models\SettingsModel;
+use App\Models\PointHistoryModel;
+// use App\Mail\OrderShipped;
+use Illuminate\Support\Facades\DB;
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
 use App\Rules\Referal;
 
-
-
-/// hi there.. this is demo branch
 class Users extends Component
 {
     public $username;
@@ -46,7 +46,6 @@ class Users extends Component
     public function check_user_details(Request $request){
         $data = $request->json()->all();
         $this->rules['ref_code'] = [new Referal($data)];
-        // var_dump($this->rules);
         $validator = Validator::make($data, $this->rules);
         if ($validator->passes()) {
             $response['success'] = true;
@@ -60,6 +59,8 @@ class Users extends Component
 
     public function register(Request $request){
         $userModel =  new UsersModel;
+        $settings =  new SettingsModel;
+        $ref_setting = $settings->get_settings('referal');
         $response = array('success'=>false);
         if( $request->is('api/*')){
             $response = array('response' => '','success'=>false);
@@ -69,12 +70,17 @@ class Users extends Component
             if ($validator->passes()) {
                 $ref_user =  UsersModel::where('ref_code','=',strtolower($data['ref_code']))->where('status','0')->first();
                 if(isset($ref_user->u_id)){
-                    $data['ref_id'] = $ref_user->u_id;
+                    $data['ref_id'] = $ref_user->u_id;    
+                    $data['points'] = $ref_setting->childEarning;   
+                    UsersModel::where(array('u_id'=>$data['ref_id']))->update(['points' => DB::raw('points + '.$ref_setting->parentEarning)]);
                 }
                 $user = $userModel->Prepare_User($data);
                 $user = UsersModel::create($user);
                 if($user){
-                    $this->send_email_verification($user->email,$user->verification_code);
+                    // $this->send_email_verification($user->email,$user->verification_code);
+                    if(isset($ref_user->u_id)){
+                        $this->insert_point_history($user->ref_id,$user->u_id);
+                    }
                     $response=array(
                         'success'=>true,
                         'message'=>'User Created Successfully',
@@ -97,8 +103,6 @@ class Users extends Component
                     return response($response);
                 }
             } else {
-                
-                // $response['response'] = $validator->errors()->messages();
                 unset($response['response']);
                 $response['message'] = $validator->errors()->first();
                 return response()->json($response);
@@ -128,11 +132,37 @@ class Users extends Component
                 'country'=>isset($data['country'])?$data['country']:NULL,
                 'api_token'=>Str::random(60),
                 'verification_code'=>Str::random(80),
+                'reset_token'=>Str::random(80),
+                'device_id'=>Str::random(8),
                 ]
             );
-            return redirect('/users');
+            $this->reset();
+            $this->dispatchBrowserEvent(
+                'alert', ['type' => 'success',  'message' => 'User Created']);
+            // return redirect('/users');
         }   
     }
+
+
+    public function insert_point_history($parent_user,$child_user){
+        $settings =  new SettingsModel;
+        $ref_setting = $settings->get_settings('referal');
+            PointHistoryModel::create(array(
+                    'user_id'=>$child_user,
+                    'point'=>$ref_setting->childEarning,
+                    'earn_type'=>'r',
+                    'ref_type'=>'c',
+                ));
+
+            PointHistoryModel::create(array(
+                'user_id'=>$parent_user,
+                'point'=>$ref_setting->parentEarning,
+                'earn_type'=>'r',
+                'ref_type'=>'p',
+            ));
+            return true;
+    }
+
 
     public function login(Request $request){
         if( $request->is('api/*')){
