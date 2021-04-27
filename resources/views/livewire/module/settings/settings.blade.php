@@ -1,6 +1,3 @@
-
-
-
 <div class="container-fluid">
     <div class="row">
         <div id="flStackForm" class="col-lg-8 col-md-8 col-sm-12 layout-spacing layout-top-spacing">
@@ -13,6 +10,7 @@
                     </div>
                 </div>
                 <div class="widget-content widget-content-area">
+                
                     <div class="row mb-4 mt-3">
                         <div class="col-sm-3 col-12">
                             <div class="nav flex-column nav-pills mb-sm-0 mb-3 text-center mx-auto" id="v-line-pills-tab" role="tablist" aria-orientation="vertical">
@@ -23,16 +21,10 @@
                         <div class="col-sm-9 col-12">
                             <div class="tab-content" id="v-line-pills-tabContent">
                                 <div class="tab-pane fade show active" id="referal" role="tabpanel" aria-labelledby="v-line-pills-referal-tab">
-                                    @livewire('forms.settings.referal');
+                                    @livewire('forms.settings.referal')
                                 </div>
-                                <div class="tab-pane fade show " id="ads" role="tabpanel" aria-labelledby="v-line-pills-ads-tab">
-                                    <h4 class="mb-4">Ads</h4>
-                                    <p class="mb-4">
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.                                                
-                                    </p>
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                    </p>                                            
+                                <div class="tab-pane fade show" id="ads" role="tabpanel" aria-labelledby="v-line-pills-ads-tab">
+                                @livewire('forms.settings.ads')
                                 </div>
                             </div>
                         </div>

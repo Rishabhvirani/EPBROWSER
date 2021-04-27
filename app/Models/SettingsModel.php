@@ -39,4 +39,6 @@ class SettingsModel extends Model
         return json_decode(json_encode($return_setting));
     }
 
+
+
 }

@@ -25,6 +25,8 @@ class Authkey
             'users/truncate_users',
             'users/check_user_details',
             'settings/get_settings',
+            'settings/get_ad_settings',
+            
         );
         if(!in_array($slug,$except)){
             $token = $request->header('token');

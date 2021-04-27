@@ -10,7 +10,6 @@ class Settings extends Component
 
     public function render()
     {
-        
         return view('livewire.module.settings.settings');
     }
 
@@ -21,5 +20,13 @@ class Settings extends Component
         $response['response'] = $ref_setting;
         return response()->json($response);
     }
+
+    public function get_ad_settings(){
+        $setting =  new SettingsModel;
+        $ref_setting = $setting->get_settings('ads'); 
+        $response['response'] = $ref_setting;
+        return response()->json($response);
+    }
+
 
 }

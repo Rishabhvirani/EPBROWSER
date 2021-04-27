@@ -37,6 +37,7 @@ Route::prefix('users')->group(function () {
 
 Route::prefix('settings')->group(function () {
     Route::post('/get_settings',[Settings::class,'get_settings']);
+    Route::post('/get_ad_settings',[Settings::class,'get_ad_settings']);
 });
 
 
