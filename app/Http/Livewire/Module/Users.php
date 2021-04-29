@@ -338,4 +338,29 @@ class Users extends Component
         }
     }
 
+    public function get_referal_users(Request $request){
+        if( $request->is('api/*')){
+            $user = UsersModel::select('username','email','created_at')->where(array('ref_id'=>$request->u_id,'status'=>'0','user_banned'=>'0'));
+            if($user->count() == 0){
+                return response()->json(['success'=>true, 'message' => 'Zero Users']);
+            }else{
+                $data['ref_user_count'] = $user->count();
+                $data['ref_user_data'] = $user->get();
+                $user_data;
+                $ref_user_data = $user->get();
+                foreach($ref_user_data as $i=>$ref_user){   
+                    $data['ref_user_data'][$i]->email = $this->star_email($ref_user->email);
+                    $data['ref_user_data'][$i]->status = 'active';
+                }
+                return response()->json(['success'=>true, 'message' => $data]);
+            }
+        }
+    }
+
+    function star_email($email)
+    {
+        return substr($email, 0, 2) . str_repeat('*', ($at_pos = strpos($email,'@')) - 3) . substr($email, $at_pos - 1);
+    }
+
+
 }

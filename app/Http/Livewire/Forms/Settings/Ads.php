@@ -19,6 +19,7 @@ class Ads extends Component
     public $setting;
     
 
+
     public function mount(){
         $this->setting =  new SettingsModel;
         $ads_setting = $this->setting->get_settings($this->label);
