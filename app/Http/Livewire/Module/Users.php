@@ -357,6 +357,16 @@ class Users extends Component
         }
     }
 
+
+    public function toggle_user_status(Request $request){
+        if( $request->is('api/*')){
+            if(UsersModel::Where(array('u_id'=>$request->u_id))->update(array('is_active'=>$request->is_active))){
+                return response()->json(['success'=>true, 'message' => 'success']);
+            }
+        }   
+    }
+
+
     function star_email($email)
     {
         return substr($email, 0, 2) . str_repeat('*', ($at_pos = strpos($email,'@')) - 3) . substr($email, $at_pos - 1);

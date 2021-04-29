@@ -27,6 +27,7 @@ Route::prefix('users')->group(function () {
         Route::post('/referesh_profile_data',[Users::class,'referesh_profile_data']);
         Route::post('/get_referal_users',[Users::class,'get_referal_users']);
         Route::post('/truncate_users',[Users::class,'truncate_users']);
+        Route::post('/toggle_user_status',[Users::class,'toggle_user_status']);
     });
     Route::post('/check_user_details',[Users::class,'check_user_details']);
     Route::post('/register',[Users::class,'register']);
