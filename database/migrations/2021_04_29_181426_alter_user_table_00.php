@@ -14,7 +14,7 @@ class AlterUserTable00 extends Migration
     public function up()
     {
         Schema::table('tbl_users', function($table) {
-            $table->decimal('dollar', 8, 2)->after('points');
+            $table->decimal('dollar', 8, 2)->default(0)->after('points');
             $table->enum('is_active', ['0', '1'],'0 - Active, 1 - Active now')->default('0')->after('status');
         });
     }
