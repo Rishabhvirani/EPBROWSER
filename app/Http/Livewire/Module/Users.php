@@ -80,7 +80,9 @@ class Users extends Component
                 $user = $userModel->Prepare_User($data);
                 $user = UsersModel::create($user);
                 if($user){
-                    // $this->send_email_verification($user->email,$user->verification_code);
+                    if(config('app.env') != 'local'){
+                        $this->send_email_verification($user->email,$user->verification_code);
+                    }
                     if(isset($ref_user->u_id) && $ref_setting->isReferalActive == 1){
                         $this->insert_point_history($user->ref_id,$user->u_id);
                     }
