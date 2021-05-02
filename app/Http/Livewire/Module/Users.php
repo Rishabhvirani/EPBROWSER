@@ -375,4 +375,5 @@ class Users extends Component
         return response()->json(['success'=>true, 'data' => $pointHistory]);
     }
     
+
 }

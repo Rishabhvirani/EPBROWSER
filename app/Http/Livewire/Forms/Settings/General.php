@@ -37,5 +37,4 @@ class General extends Component
         $this->dispatchBrowserEvent('alert', ['type' => 'success',  'message' => 'Notification Setting updated']);
     }
 
-
 }
