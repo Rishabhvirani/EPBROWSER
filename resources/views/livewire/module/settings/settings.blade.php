@@ -16,6 +16,7 @@
                                 <a class="nav-link active mb-3" id="v-line-pills-home-tab" data-toggle="pill" href="#referal" role="tab" aria-controls="v-line-pills-home" aria-selected="true">Referals</a>
                                 <a class="nav-link mb-3  text-center" id="v-line-pills-profile-tab" data-toggle="pill" href="#ads" role="tab" aria-controls="v-line-pills-ads" aria-selected="false">Ads</a>
                                 <a class="nav-link mb-3  text-center" id="v-line-pills-profile-tab" data-toggle="pill" href="#conversion" role="tab" aria-controls="v-line-pills-conversion" aria-selected="false">Conversion</a>
+                                <a class="nav-link mb-3  text-center" id="v-line-pills-profile-tab" data-toggle="pill" href="#general" role="tab" aria-controls="v-line-pills-general" aria-selected="false">General</a>
                             </div>
                         </div>
                         <div class="col-sm-9 col-12">
@@ -28,6 +29,9 @@
                                 </div>
                                 <div class="tab-pane fade show" id="conversion" role="tabpanel" aria-labelledby="v-line-pills-conversion-tab">
                                 @livewire('forms.settings.conversion')
+                                </div>
+                                <div class="tab-pane fade show" id="general" role="tabpanel" aria-labelledby="v-line-pills-general-tab">
+                                @livewire('forms.settings.general')
                                 </div>
                             </div>
                         </div>

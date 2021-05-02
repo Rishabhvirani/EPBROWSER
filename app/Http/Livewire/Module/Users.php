@@ -341,7 +341,7 @@ class Users extends Component
 
     public function get_referal_users(Request $request){
         if( $request->is('api/*')){
-            $user = UsersModel::select('username','email','created_at')->where(array('ref_id'=>$request->u_id,'status'=>'0','user_banned'=>'0'));
+            $user = UsersModel::select('username','is_active','email','created_at')->where(array('ref_id'=>$request->u_id,'status'=>'0','user_banned'=>'0'));
             if($user->count() == 0){
                 return response()->json(['success'=>true, 'message' => 'Zero Users']);
             }else{
@@ -351,13 +351,11 @@ class Users extends Component
                 $ref_user_data = $user->get();
                 foreach($ref_user_data as $i=>$ref_user){   
                     $data['ref_user_data'][$i]->email = $this->star_email($ref_user->email);
-                    $data['ref_user_data'][$i]->status = 'active';
                 }
                 return response()->json(['success'=>true, 'data' => $data]);
             }
         }
     }
-
 
     public function toggle_user_status(Request $request){
         if( $request->is('api/*')){
@@ -366,7 +364,6 @@ class Users extends Component
             }
         }   
     }
-
 
     public function star_email($email)
     {

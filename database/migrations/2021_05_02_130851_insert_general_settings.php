@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class InsertConversion extends Migration
+class InsertGeneralSettings extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,8 @@ class InsertConversion extends Migration
     public function up()
     {
         DB::table('tbl_settings')->insert(array(
-            array('name' => 'isConversionEnabled','value' => false,'type'=>'p','label'=>'conversion'),
-            array('name' => 'ConversionRate','value' => 0,'type'=>'c','label'=>'conversion'),
+            array('name' => 'isNotificationEnabled','value' => false,'type'=>'p','label'=>'general'),
+            array('name' => 'isWithdrwalEnabled','value' => false,'type'=>'p','label'=>'general'),
         ));
     }
 
@@ -26,6 +26,7 @@ class InsertConversion extends Migration
      */
     public function down()
     {
-        DB::table('tbl_settings')->where('label','conversion')->delete();
+        DB::table('tbl_settings')->where('name','isNotificationEnabled')->delete();
+        DB::table('tbl_settings')->where('name','isWithdrwalEnabled')->delete();
     }
 }
