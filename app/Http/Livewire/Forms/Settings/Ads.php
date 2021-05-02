@@ -2,8 +2,7 @@
 namespace App\Http\Livewire\Forms\Settings;
 use App\Models\SettingsModel;
 use Livewire\Component;
-// Development Branch
-// Notification na changes
+
 class Ads extends Component
 {
     public $appId = '';
