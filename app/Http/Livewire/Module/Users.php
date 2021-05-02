@@ -60,7 +60,8 @@ class Users extends Component
     public function register(Request $request){
         $userModel =  new UsersModel;
         $settings =  new SettingsModel;
-        $ref_setting = $settings->get_settings('referal');
+        $refdata['label'] = 'referal';
+        $ref_setting = $settings->get_settings($refdata);
         $response = array('success'=>false);
         if( $request->is('api/*')){
             $response = array('response' => '','success'=>false);
@@ -141,13 +142,13 @@ class Users extends Component
             $this->reset();
             $this->dispatchBrowserEvent(
                 'alert', ['type' => 'success',  'message' => 'User Created']);
-            // return redirect('/users');
+            
         }   
     }
 
     public function insert_point_history($parent_user,$child_user){
         $settings =  new SettingsModel;
-        $ref_setting = $settings->get_settings('referal');
+        $ref_setting = $settings->get_settings(array('label'=>'referal'));
             PointHistoryModel::create(array(
                     'user_id'=>$child_user,
                     'point'=>$ref_setting->childEarning,
@@ -352,7 +353,7 @@ class Users extends Component
                     $data['ref_user_data'][$i]->email = $this->star_email($ref_user->email);
                     $data['ref_user_data'][$i]->status = 'active';
                 }
-                return response()->json(['success'=>true, 'message' => $data]);
+                return response()->json(['success'=>true, 'data' => $data]);
             }
         }
     }
@@ -367,10 +368,14 @@ class Users extends Component
     }
 
 
-    function star_email($email)
+    public function star_email($email)
     {
         return substr($email, 0, 2) . str_repeat('*', ($at_pos = strpos($email,'@')) - 3) . substr($email, $at_pos - 1);
     }
 
-
+    public function get_point_hisotry(Request $request){
+        $pointHistory = PointHistoryModel::where(array('user_id'=>$request->u_id,'status'=>'0'))->get();
+        return response()->json(['success'=>true, 'data' => $pointHistory]);
+    }
+    
 }

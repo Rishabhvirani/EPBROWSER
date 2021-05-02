@@ -15,7 +15,8 @@ class Referal extends Component
 
     public function mount(){
         $this->setting =  new SettingsModel;
-        $ref_setting = $this->setting->get_settings($this->label);
+        $data['label'] = $this->label;
+        $ref_setting = $this->setting->get_settings($data);
         $this->isReferalActive = $ref_setting->isReferalActive == '0' ? false:true;
         $this->parentEarning = $ref_setting->parentEarning;
         $this->childEarning = $ref_setting->childEarning;

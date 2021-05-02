@@ -13,7 +13,7 @@ class CreateTblPoinHistory extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_poin_history', function (Blueprint $table) {
+        Schema::create('tbl_point_history', function (Blueprint $table) {
             $table->id('ph_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->decimal('point', 8, 2)->unsigned()->default('0');
@@ -33,7 +33,7 @@ class CreateTblPoinHistory extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tbl_poin_history');
+        Schema::dropIfExists('tbl_point_history');
     }
 
 }

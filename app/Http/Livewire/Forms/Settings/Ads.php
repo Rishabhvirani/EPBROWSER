@@ -17,12 +17,11 @@ class Ads extends Component
 
     public $label = 'ads';
     public $setting;
-    
-
 
     public function mount(){
         $this->setting =  new SettingsModel;
-        $ads_setting = $this->setting->get_settings($this->label);
+        $data['label'] = $this->label;
+        $ads_setting = $this->setting->get_settings($data);
         $this->appId = $ads_setting->appId;
         $this->isBannerAdActive = $ads_setting->isBannerAdActive  == '0' ? false:true;
         $this->isInterstitialAdActive = $ads_setting->isInterstitialAdActive  == '0' ? false:true;

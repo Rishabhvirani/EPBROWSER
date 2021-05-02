@@ -10,12 +10,12 @@
                     </div>
                 </div>
                 <div class="widget-content widget-content-area">
-                
                     <div class="row mb-4 mt-3">
                         <div class="col-sm-3 col-12">
                             <div class="nav flex-column nav-pills mb-sm-0 mb-3 text-center mx-auto" id="v-line-pills-tab" role="tablist" aria-orientation="vertical">
                                 <a class="nav-link active mb-3" id="v-line-pills-home-tab" data-toggle="pill" href="#referal" role="tab" aria-controls="v-line-pills-home" aria-selected="true">Referals</a>
                                 <a class="nav-link mb-3  text-center" id="v-line-pills-profile-tab" data-toggle="pill" href="#ads" role="tab" aria-controls="v-line-pills-ads" aria-selected="false">Ads</a>
+                                <a class="nav-link mb-3  text-center" id="v-line-pills-profile-tab" data-toggle="pill" href="#conversion" role="tab" aria-controls="v-line-pills-conversion" aria-selected="false">Conversion</a>
                             </div>
                         </div>
                         <div class="col-sm-9 col-12">
@@ -25,6 +25,9 @@
                                 </div>
                                 <div class="tab-pane fade show" id="ads" role="tabpanel" aria-labelledby="v-line-pills-ads-tab">
                                 @livewire('forms.settings.ads')
+                                </div>
+                                <div class="tab-pane fade show" id="conversion" role="tabpanel" aria-labelledby="v-line-pills-conversion-tab">
+                                @livewire('forms.settings.conversion')
                                 </div>
                             </div>
                         </div>

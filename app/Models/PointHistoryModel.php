@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class PointHistoryModel extends Model
 {
     use HasFactory;
-    protected $table = 'tbl_poin_history';
+    protected $table = 'tbl_point_history';
     protected $primaryKey = 'ph_id';
     
     protected $fillable = [
