@@ -17,7 +17,6 @@ class Settings extends Component
 
     public function get_settings(Request $request){
         $data = $request->json()->all();
-        
         if(!isset($data['label'])){
             unset($data['label']);
         }

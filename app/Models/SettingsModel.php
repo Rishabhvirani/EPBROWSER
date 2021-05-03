@@ -16,7 +16,7 @@ class SettingsModel extends Model
 
     public function get_settings($data){
             $settings = Model::where($data)->get();
-            $return_setting;
+            $return_setting=[];
             if(count($settings) > 1){
                 foreach($settings as $setting){
                     $return_setting[$setting['name']] = $setting['value'];

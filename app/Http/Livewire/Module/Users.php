@@ -192,9 +192,6 @@ class Users extends Component
             return true;
     }
 
-    
-
-
     public function login(Request $request){
         if( $request->is('api/*')){
             $username = $request->input('username');
@@ -371,7 +368,7 @@ class Users extends Component
 
     public function get_referal_users(Request $request){
         if( $request->is('api/*')){
-            $user = UsersModel::select('username','is_active','email','created_at')->where(array('ref_id'=>$request->u_id,'status'=>'0','user_banned'=>'0'));
+            $user = UsersModel::select('username','last_active','email','created_at')->where(array('ref_id'=>$request->u_id,'status'=>'0','user_banned'=>'0'));
             if($user->count() == 0){
                 return response()->json(['success'=>true, 'message' => 'Zero Users']);
             }else{
@@ -423,5 +420,10 @@ class Users extends Component
         $unseen_count = NotificationModel::where(array('receiver'=>$request->u_id,'is_read'=>'0'))->update(array('is_read'=>'1'));
         return response()->json(['success'=>true]); 
     }
+
+    public function update_last_active(Request $request){
+        UsersModel::where(array('u_id'=>$request->u_id))->update(array('last_active'=>now()));
+    }
+
 
 }
