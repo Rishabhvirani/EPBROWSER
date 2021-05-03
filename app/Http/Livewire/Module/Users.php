@@ -378,6 +378,7 @@ class Users extends Component
                 $ref_user_data = $user->get();
                 foreach($ref_user_data as $i=>$ref_user){   
                     $data['ref_user_data'][$i]->email = $this->star_email($ref_user->email);
+                    $data['ref_user_data'][$i]->last_active = isset($ref_user->last_active) ? $ref_user->last_active : '';
                 }
                 return response()->json(['success'=>true, 'data' => $data]);
             }
