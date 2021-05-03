@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\SettingsModel;
 use App\Models\PointHistoryModel;
+use App\Models\NotificationModel;
 // use App\Mail\OrderShipped;
 use Illuminate\Support\Facades\DB;
 use App\Mail\VerifyEmail;
@@ -80,7 +81,7 @@ class Users extends Component
                 $user = $userModel->Prepare_User($data);
                 $user = UsersModel::create($user);
                 if($user){
-                    if(config('app.env') != 'local'){
+                    if(config('app.env') === 'production'){
                         $this->send_email_verification($user->email,$user->verification_code);
                     }
                     if(isset($ref_user->u_id) && $ref_setting->isReferalActive == 1){
@@ -151,6 +152,8 @@ class Users extends Component
     public function insert_point_history($parent_user,$child_user){
         $settings =  new SettingsModel;
         $ref_setting = $settings->get_settings(array('label'=>'referal'));
+
+        
             PointHistoryModel::create(array(
                     'user_id'=>$child_user,
                     'point'=>$ref_setting->childEarning,
@@ -158,14 +161,39 @@ class Users extends Component
                     'ref_type'=>'c',
                 ));
 
+            NotificationModel::create(
+                array(
+                    'sender'=>$parent_user,
+                    'receiver'=>$child_user,
+                    'n_type'=>'r',
+                    'ref_type'=>'c',
+                    'points'=>$ref_setting->childEarning,
+                )
+            );
+
+
             PointHistoryModel::create(array(
                 'user_id'=>$parent_user,
                 'point'=>$ref_setting->parentEarning,
                 'earn_type'=>'r',
                 'ref_type'=>'p',
             ));
+
+            NotificationModel::create(
+                array(
+                    'sender'=>$child_user,
+                    'receiver'=>$parent_user,
+                    'n_type'=>'r',
+                    'ref_type'=>'p',
+                    'points'=>$ref_setting->parentEarning,
+                )
+            );
+
             return true;
     }
+
+    
+
 
     public function login(Request $request){
         if( $request->is('api/*')){
@@ -376,6 +404,24 @@ class Users extends Component
         $pointHistory = PointHistoryModel::where(array('user_id'=>$request->u_id,'status'=>'0'))->get();
         return response()->json(['success'=>true, 'data' => $pointHistory]);
     }
-    
+
+    public function get_notification(Request $request){
+        $notifications = DB::table('tbl_notification')
+        ->join('tbl_users','tbl_notification.sender','=','tbl_users.u_id')
+        ->where(array('tbl_notification.receiver'=>$request->u_id))
+        ->select('tbl_notification.*','tbl_users.username')
+        ->orderByDesc('tbl_notification.n_id')
+        ->get();
+        $unseen_count = NotificationModel::where(array('receiver'=>$request->u_id,'is_read'=>'0'))->count();
+
+        $data['unseen_count'] = $unseen_count;
+        $data['notifications']=$notifications;
+        return response()->json(['success'=>true, 'data' => $data]); 
+    }
+
+    public function seen_notifications(Request $request){
+        $unseen_count = NotificationModel::where(array('receiver'=>$request->u_id,'is_read'=>'0'))->update(array('is_read'=>'1'));
+        return response()->json(['success'=>true]); 
+    }
 
 }

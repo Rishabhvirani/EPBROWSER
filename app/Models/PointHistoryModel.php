@@ -19,6 +19,5 @@ class PointHistoryModel extends Model
         'ref_type',
         'timer_id',
     ];
-
-
+    
 }

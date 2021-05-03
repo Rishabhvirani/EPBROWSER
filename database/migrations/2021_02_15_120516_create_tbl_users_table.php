@@ -25,7 +25,7 @@ class CreateTblUsersTable extends Migration
             $table->enum('email_verified', ['0', '1'],'0 - Not Verified, 1 - Verified')->default('0');
             $table->enum('mobile_verified', ['0', '1'],'0 - Not Verified, 1 - Verified')->default('0');
             $table->enum('user_banned', ['0', '1'],'0 - Active, 1 - banned')->default('0');
-            $table->string('coin_address')->unique();
+            $table->string('coin_address')->nullable();
             $table->decimal('points', 8, 2);
             $table->decimal('coins', 8, 2);
             $table->integer('ref_id')->unsigned()->nullable();
