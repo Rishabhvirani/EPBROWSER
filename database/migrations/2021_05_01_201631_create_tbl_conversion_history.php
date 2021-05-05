@@ -17,7 +17,7 @@ class CreateTblConversionHistory extends Migration
             $table->id();
             $table->integer('u_id')->unsigned();
             $table->decimal('points', 8, 2);
-            $table->decimal('dollar', 8, 2);
+            $table->decimal('usd', 8, 2);
             $table->string('conversionRate')->nullable();
             $table->timestamps();
         });

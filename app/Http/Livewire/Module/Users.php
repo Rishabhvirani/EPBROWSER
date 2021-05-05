@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\SettingsModel;
 use App\Models\PointHistoryModel;
 use App\Models\NotificationModel;
+use App\Models\ConversionModel;
 // use App\Mail\OrderShipped;
 use Illuminate\Support\Facades\DB;
 use App\Mail\VerifyEmail;
@@ -426,5 +427,47 @@ class Users extends Component
         UsersModel::where(array('u_id'=>$request->u_id))->update(array('last_active'=>now()));
     }
 
+    public function convert_points(Request $request){
+
+        $data = $request->json()->all();
+        $data['u_id'] = $request->u_id;
+        $settingModel = new SettingsModel();
+        $conversion_settings = $settingModel->get_settings(array('label'=>'conversion'));
+        $MinConversion = (int)$conversion_settings->MinConversion;
+        $ConversionRate = explode(":",$conversion_settings->ConversionRate);
+        $points = $ConversionRate[0];
+        $usd = $ConversionRate[1];
+        $data['conversionRate'] = $conversion_settings->ConversionRate;
+        $data['usd'] = $data['points'] / $points * $usd;
+
+        if($data['points'] < $MinConversion){
+            return response()->json(['success'=>true,'message'=>"You need minimum $conversion_settings->MinConversion candy for conversion"]); 
+        }
+
+        $user_data = UsersModel::select('points','usd')->where(array('u_id'=>$request->u_id))->first();
+        if($data['points'] > $user_data->points){
+            return response()->json(['success'=>true,'message'=>'You have only ' .$user_data->points .' candy']); 
+        }
+        $update_data = array(
+            'usd'=>DB::raw('`usd`+'.$data['usd']),
+            'points'=>DB::raw('`points`'.'-'.$data['points']),
+        );
+        $conversionHistory = ConversionModel::create($data);
+        if(isset($conversionHistory)){
+            UsersModel::where(array('u_id'=>$request->u_id))->update($update_data);
+            NotificationModel::create(
+                [
+                    'receiver'=>$request->u_id,
+                    'n_type'=>'c',
+                    'points'=>$data['points'],
+                    'usd'=>$data['usd'],
+                    'data'=>$conversionHistory->id,
+                ]
+                );
+
+
+        }
+        return response()->json(['success'=>true,'message'=>'Points Converted Successfully']); 
+    }
 
 }

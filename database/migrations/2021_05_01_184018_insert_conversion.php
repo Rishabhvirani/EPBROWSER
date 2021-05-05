@@ -16,6 +16,7 @@ class InsertConversion extends Migration
         DB::table('tbl_settings')->insert(array(
             array('name' => 'isConversionEnabled','value' => false,'type'=>'p','label'=>'conversion'),
             array('name' => 'ConversionRate','value' => 0,'type'=>'c','label'=>'conversion'),
+            array('name' => 'MinConversion','value' => 1000,'type'=>'c','label'=>'conversion'),
         ));
     }
 

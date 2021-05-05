@@ -16,9 +16,16 @@
     </div>
     
     <div class="form-group row mb-4">
-        <label for="dollar" class="col-xl-2 col-sm-3 col-sm-2 col-form-label">Dollar</label>
+        <label for="dollar" class="col-xl-2 col-sm-3 col-sm-2 col-form-label">USD</label>
         <div class="col-xl-10 col-lg-9 col-sm-10">
-            <input type="number" class="form-control" id="dollar" wire:model="dollar" step=".01" placeholder="Enter Dollar" required>
+            <input type="number" class="form-control" id="dollar" wire:model="dollar" step=".01" placeholder="Enter USD" required>
+        </div>
+    </div>
+
+    <div class="form-group row mb-4">
+        <label for="MinConversion" class="col-xl-2 col-sm-3 col-sm-2 col-form-label">Minimun Conversion</label>
+        <div class="col-xl-10 col-lg-9 col-sm-10">
+            <input type="number" class="form-control" id="MinConversion" wire:model="MinConversion" step=".01" placeholder="Enter Minimum Conversion" required>
         </div>
     </div>
 

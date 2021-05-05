@@ -15,7 +15,7 @@ class NotificationModel extends Model
         'receiver',
         'n_type',
         'points',
-        'dollar',
+        'usd',
         'coins',   
         'timer',
         'data',

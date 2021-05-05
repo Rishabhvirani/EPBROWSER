@@ -8,6 +8,7 @@ class Conversion extends Component
 {
     public $isConversionEnabled = false;
     public $ConversionRate  = 0;
+    public $MinConversion  = 0;
     public $label = 'conversion';
     public $points;
     public $dollar;
@@ -19,12 +20,12 @@ class Conversion extends Component
         $conv_setting = $this->setting->get_settings($data);
         $this->isConversionEnabled = $conv_setting->isConversionEnabled == '0' ? false:true;
         $this->ConversionRate = $conv_setting->ConversionRate;
+        $this->MinConversion = $conv_setting->MinConversion;
         if($this->ConversionRate == NULL || $this->ConversionRate == 0){
             $this->points = 0;
             $this->dollar = 0;
         }else{
             $ConversionRate = explode(":",$this->ConversionRate);
-            
             $this->points = $ConversionRate[0];
             $this->dollar = $ConversionRate[1];
         }
@@ -35,15 +36,15 @@ class Conversion extends Component
             'points' => 'required|min:1|numeric',
             'dollar' => 'required|min:1|numeric',
             'isConversionEnabled' => 'required',
+            'MinConversion'=>'required',
         ]);
         
-        $this->ConversionRate = $this->points . ':'. $this->dollar; 
-        
+        $this->ConversionRate = $this->points . ':'. $this->dollar;
         SettingsModel::where(array('name'=>'isConversionEnabled','label'=>$this->label))->update(array('value'=>$this->isConversionEnabled));
         SettingsModel::where(array('name'=>'ConversionRate','label'=>$this->label))->update(array('value'=>$this->ConversionRate));
+        SettingsModel::where(array('name'=>'MinConversion','label'=>$this->label))->update(array('value'=>$this->MinConversion));
+        $this->mount();
         $this->dispatchBrowserEvent('alert', ['type' => 'success',  'message' => 'Conversion Setting updated']);
-
-
     }
 
 
