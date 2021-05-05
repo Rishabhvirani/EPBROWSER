@@ -374,7 +374,10 @@ class Users extends Component
         if( $request->is('api/*')){
             $user = UsersModel::select('username','last_active','email','created_at')->where(array('ref_id'=>$request->u_id,'status'=>'0','user_banned'=>'0'));
             if($user->count() == 0){
-                return response()->json(['success'=>true, 'message' => 'Zero Users','data'=>[]]);
+                // $data['data'] 
+                // 'data'=> {'ref_user_count':0,'ref_user_data':[]}
+                 $data = json_encode(array('data'=>[]));
+                return response()->json(['success'=>true, 'message' => 'Zero Users','data'=>json_decode('{}')]);
             }else{
                 $data['ref_user_count'] = $user->count();
                 $data['ref_user_data'] = $user->get();
@@ -408,6 +411,10 @@ class Users extends Component
     }
 
     public function get_notification(Request $request){
+        $total_count = NotificationModel::where(array('receiver'=>$request->u_id))->count();
+        if($total_count == 0){
+            return response()->json(['success'=>true, 'message' => 'Zero Notification','data'=>json_decode('{}')]);
+        }
         $notifications = DB::table('tbl_notification')
         ->join('tbl_users','tbl_notification.sender','=','tbl_users.u_id','left')
         ->where(array('tbl_notification.receiver'=>$request->u_id))
@@ -415,7 +422,6 @@ class Users extends Component
         ->orderByDesc('tbl_notification.n_id')
         ->get();
         $unseen_count = NotificationModel::where(array('receiver'=>$request->u_id,'is_read'=>'0'))->count();
-
         $data['unseen_count'] = $unseen_count;
         $data['notifications']=$notifications;
         return response()->json(['success'=>true, 'data' => $data]); 
@@ -478,5 +484,3 @@ class Users extends Component
     }
 
 }
-
-
