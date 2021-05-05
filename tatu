@@ -1,0 +1,14 @@
+[1mdiff --git a/app/Http/Livewire/Module/Users.php b/app/Http/Livewire/Module/Users.php[m
+[1mindex 67fbb9b..123b4fa 100644[m
+[1m--- a/app/Http/Livewire/Module/Users.php[m
+[1m+++ b/app/Http/Livewire/Module/Users.php[m
+[36m@@ -477,9 +477,7 @@[m [mclass Users extends Component[m
+         return response()->json(['success'=>true,'message'=>'Points Converted Successfully']); [m
+     }[m
+ [m
+[31m-[m
+     public function get_conversion_history(Request $request){[m
+[31m-        [m
+         $conversion_history = ConversionModel::where(array('u_id'=>$request->u_id))->get();[m
+         return response()->json(['success'=>true,'data'=>$conversion_history]); [m
+     }[m
