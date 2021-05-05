@@ -33,6 +33,8 @@ Route::prefix('users')->group(function () {
         Route::post('/seen_notifications',[Users::class,'seen_notifications']);
         Route::post('/update_last_active',[Users::class,'update_last_active']);
         Route::post('/convert_points',[Users::class,'convert_points']);
+        Route::post('/get_conversion_history',[Users::class,'get_conversion_history']);
+        
         
     });
     Route::post('/check_user_details',[Users::class,'check_user_details']);
