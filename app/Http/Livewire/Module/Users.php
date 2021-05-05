@@ -374,7 +374,7 @@ class Users extends Component
         if( $request->is('api/*')){
             $user = UsersModel::select('username','last_active','email','created_at')->where(array('ref_id'=>$request->u_id,'status'=>'0','user_banned'=>'0'));
             if($user->count() == 0){
-                return response()->json(['success'=>true, 'message' => 'Zero Users','data'=>'']);
+                return response()->json(['success'=>true, 'message' => 'Zero Users','data'=>[]]);
             }else{
                 $data['ref_user_count'] = $user->count();
                 $data['ref_user_data'] = $user->get();
@@ -478,3 +478,5 @@ class Users extends Component
     }
 
 }
+
+
