@@ -479,6 +479,7 @@ class Users extends Component
 
 
     public function get_conversion_history(Request $request){
+        
         $conversion_history = ConversionModel::where(array('u_id'=>$request->u_id))->get();
         return response()->json(['success'=>true,'data'=>$conversion_history]); 
     }
