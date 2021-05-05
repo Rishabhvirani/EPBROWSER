@@ -409,7 +409,7 @@ class Users extends Component
 
     public function get_notification(Request $request){
         $notifications = DB::table('tbl_notification')
-        ->join('tbl_users','tbl_notification.sender','=','tbl_users.u_id')
+        ->join('tbl_users','tbl_notification.sender','=','tbl_users.u_id','left')
         ->where(array('tbl_notification.receiver'=>$request->u_id))
         ->select('tbl_notification.*','tbl_users.username')
         ->orderByDesc('tbl_notification.n_id')
