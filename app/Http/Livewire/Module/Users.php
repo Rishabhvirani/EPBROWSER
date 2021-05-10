@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\DB;
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
 use App\Rules\Referal;
+use Carbon\Carbon;
+
 
 class Users extends Component
 {
@@ -406,7 +408,14 @@ class Users extends Component
     }
 
     public function get_point_hisotry(Request $request){
-        $pointHistory = PointHistoryModel::where(array('user_id'=>$request->u_id,'status'=>'0'))->get();
+        $pointHistory = PointHistoryModel::where(array('user_id'=>$request->u_id,'status'=>'0'))->get()->map(
+            function($data) {
+                if(!$data->timer_id){
+                    $data->timer_id = "";
+                }
+                return $data;
+            });
+        
         return response()->json(['success'=>true, 'data' => $pointHistory]);
     }
 
@@ -444,7 +453,7 @@ class Users extends Component
                 $data->usd = '';
             }
             return $data;
-        });;
+        });
         $unseen_count = NotificationModel::where(array('receiver'=>$request->u_id,'is_read'=>'0'))->count();
         $data['unseen_count'] = $unseen_count;
         $data['notifications']=$notifications;

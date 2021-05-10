@@ -15,8 +15,20 @@ class ConversionModel extends Model
         'points',
         'usd',
         'conversionRate',
-        'created_at',
-        'updated_at'
+        
+    ];
+
+    protected $dates = [
+        'created_at', 
+        'updated_at', 
+    ];
+
+    protected $dateFormat = 'U';
+ 
+
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
 
 
