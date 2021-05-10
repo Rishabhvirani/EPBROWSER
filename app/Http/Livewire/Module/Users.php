@@ -420,7 +420,31 @@ class Users extends Component
         ->where(array('tbl_notification.receiver'=>$request->u_id))
         ->select('tbl_notification.*','tbl_users.username')
         ->orderByDesc('tbl_notification.n_id')
-        ->get();
+        ->get()
+        ->map(function($data) {
+            if (!$data->sender) {
+                $data->sender = '';
+            }
+            if (!$data->ref_type) {
+                $data->ref_type = '';
+            }
+            if (!$data->coins) {
+                $data->coins = '';
+            }
+            if (!$data->timer) {
+                $data->timer = '';
+            }
+            if (!$data->data) {
+                $data->data = '';
+            }
+            if (!$data->username) {
+                $data->username = '';
+            }
+            if (!$data->usd) {
+                $data->usd = '';
+            }
+            return $data;
+        });;
         $unseen_count = NotificationModel::where(array('receiver'=>$request->u_id,'is_read'=>'0'))->count();
         $data['unseen_count'] = $unseen_count;
         $data['notifications']=$notifications;
