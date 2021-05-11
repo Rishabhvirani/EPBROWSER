@@ -289,8 +289,9 @@ class Users extends Component
                 $rules = ['password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',];
                 $validator = Validator::make($data, $rules);
                 if ($validator->passes()) {
-                    if(UsersModel::where('u_id','=',$request->u_id)->update(['password'=>Hash::make($data['password'])])){
-                        return response()->json(['success'=>true, 'message' => "Password Updated Successfully"]);
+                    $token = Str::random(60);
+                    if(UsersModel::where('u_id','=',$request->u_id)->update(['password'=>Hash::make($data['password']),'api_token'=>$token])){
+                        return response()->json(['success'=>true, 'message' => "Password Updated Successfully",'api_token'=>$token]);
                     }
                     return response()->json(['success'=>false, 'message' => 'Something Went Wrong']);
                 }else{
@@ -355,7 +356,8 @@ class Users extends Component
             $rules = ['password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',];
             $validator = Validator::make($data, $rules);
             if ($validator->passes()) {
-                if(UsersModel::where('u_id','=',$user->u_id)->update(['password'=>Hash::make($data['password']),'api_token'=>Str::random(60)])){
+                
+                if(UsersModel::where('u_id','=',$user->u_id)->update(['password'=>Hash::make($data['password'])])){
                     return response()->json(['success'=>true, 'message' => "Password Updated Successfully"]);
                 }
                 return response()->json(['success'=>false, 'message' => 'Something Went Wrong']);
