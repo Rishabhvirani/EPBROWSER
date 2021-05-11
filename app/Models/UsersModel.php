@@ -27,7 +27,9 @@ class UsersModel extends Model
         'api_token',
         'reset_token',
         'verification_code',
+        'email_verified',
         'device_id',
+        'mobile_verified',
     ];
 
     public function Prepare_User($user){

@@ -355,7 +355,7 @@ class Users extends Component
             $rules = ['password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',];
             $validator = Validator::make($data, $rules);
             if ($validator->passes()) {
-                if(UsersModel::where('u_id','=',$user->u_id)->update(['password'=>Hash::make($data['password'])])){
+                if(UsersModel::where('u_id','=',$user->u_id)->update(['password'=>Hash::make($data['password']),'api_token'=>Str::random(60)])){
                     return response()->json(['success'=>true, 'message' => "Password Updated Successfully"]);
                 }
                 return response()->json(['success'=>false, 'message' => 'Something Went Wrong']);
@@ -376,8 +376,6 @@ class Users extends Component
         if( $request->is('api/*')){
             $user = UsersModel::select('username','last_active','email','created_at')->where(array('ref_id'=>$request->u_id,'status'=>'0','user_banned'=>'0'));
             if($user->count() == 0){
-                // $data['data'] 
-                // 'data'=> {'ref_user_count':0,'ref_user_data':[]}
                  $data = json_encode(array('data'=>[]));
                 return response()->json(['success'=>true, 'message' => 'Zero Users','data'=>json_decode('{}')]);
             }else{
@@ -470,7 +468,6 @@ class Users extends Component
     }
 
     public function convert_points(Request $request){
-
         $data = $request->json()->all();
         $data['u_id'] = $request->u_id;
         $settingModel = new SettingsModel();
