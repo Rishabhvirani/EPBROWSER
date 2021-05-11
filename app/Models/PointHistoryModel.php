@@ -25,7 +25,7 @@ class PointHistoryModel extends Model
         'updated_at', 
     ];
 
-    protected $dateFormat = 'U';
+    // protected $dateFormat = 'U';
  
 
     protected $casts = [

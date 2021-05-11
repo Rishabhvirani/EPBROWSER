@@ -23,7 +23,7 @@ class ConversionModel extends Model
         'updated_at', 
     ];
 
-    protected $dateFormat = 'U';
+    // protected $dateFormat = 'U';
  
 
     protected $casts = [
