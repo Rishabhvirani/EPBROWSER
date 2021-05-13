@@ -84,9 +84,9 @@ class Users extends Component
                 $user = $userModel->Prepare_User($data);
                 $user = UsersModel::create($user);
                 if($user){
-                    if(config('app.env') === 'production'){
+                    // if(config('app.env') === 'production'){
                         $this->send_email_verification($user->email,$user->verification_code);
-                    }
+                    // }
                     if(isset($ref_user->u_id) && $ref_setting->isReferalActive == 1){
                         $this->insert_point_history($user->ref_id,$user->u_id);
                     }
@@ -214,9 +214,9 @@ class Users extends Component
             if($user->user_banned == '1'){
                 return response()->json(['success'=>false, 'message' => 'Your Account has been banned by the Administrator']);
             }
-            // if($user->device_id != $device_id){
-            //     return response()->json(['success'=>false, 'message' => 'Please Log in Throught the registered Device']);
-            // }
+            if($user->device_id != $device_id){
+                return response()->json(['success'=>false, 'message' => 'Please Log in Throught the registered Device']);
+            }
             $user = $user->where('u_id', $user->u_id)->update(['api_token'=>Str::random(60)]);
             $user = UsersModel::where('username', '=', $username)->first();
             return response()->json(['success'=>true,'message'=>'Login Successfully', 'data' => array(
@@ -325,6 +325,15 @@ class Users extends Component
 
     public function send_email_verification($email,$verification){
         Mail::to($email)->send(new VerifyEmail($verification));
+    }
+
+    public function resend_email_verification(Request $request){
+        $user_data = UsersModel::select('verification_code','email')->where(array('u_id'=>$request->u_id))->first();
+            if(Mail::to($user_data->email)->send(new VerifyEmail($user_data->verification_code))){
+                return response()->json(['success'=>true, 'message' => "Your Verification Email has been sent."]);
+            }else{
+                return response()->json(['success'=>true, 'message' => "Something went wrong"]);
+            }   
     }
 
     public function verify_email(){
@@ -509,6 +518,7 @@ class Users extends Component
         return response()->json(['success'=>true,'message'=>'Points Converted Successfully']); 
     }
 
+    
 
     public function get_conversion_history(Request $request){
         

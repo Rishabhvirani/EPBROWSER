@@ -16,9 +16,6 @@ use App\Http\Livewire\Module\Settings\Settings;
 */
 
 // Route::get('/registerr',[UsersController::class,'register']);
-
-
-
 Route::prefix('users')->group(function () {
     Route::middleware(['AuthKey'])->group(function () {
         Route::post('/logout',[Users::class,'logout']);    
@@ -34,8 +31,7 @@ Route::prefix('users')->group(function () {
         Route::post('/update_last_active',[Users::class,'update_last_active']);
         Route::post('/convert_points',[Users::class,'convert_points']);
         Route::post('/get_conversion_history',[Users::class,'get_conversion_history']);
-        
-        
+        Route::post('/resend_email_verification',[Users::class,'resend_email_verification']);
     });
     Route::post('/check_user_details',[Users::class,'check_user_details']);
     Route::post('/register',[Users::class,'register']);
