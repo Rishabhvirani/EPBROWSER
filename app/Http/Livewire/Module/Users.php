@@ -328,12 +328,10 @@ class Users extends Component
     }
 
     public function resend_email_verification(Request $request){
-        $user_data = UsersModel::select('verification_code','email')->where(array('u_id'=>$request->u_id))->first();
-            if(Mail::to($user_data->email)->send(new VerifyEmail($user_data->verification_code))){
-                return response()->json(['success'=>true, 'message' => "Your Verification Email has been sent."]);
-            }else{
-                return response()->json(['success'=>true, 'message' => "Something went wrong"]);
-            }   
+        $user_data = UsersModel::select('verification_code','email')->where(array('u_id'=>$request->u_id))->first();    
+        Mail::to($user_data->email)->send(new VerifyEmail($user_data->verification_code));
+        return response()->json(['success'=>true, 'message' => "Your Verification Email has been sent."]);
+        
     }
 
     public function verify_email(){
