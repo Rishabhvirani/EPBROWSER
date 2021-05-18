@@ -20,20 +20,16 @@ use Carbon\Carbon;
 
 class Users extends Component
 {
-    public $username;
-    public $email;
-    public $password;
-    public $password_confirmation;
-    public $mobile;
-    public $point;
-    public $coin;
-    public $ref_code;
-    public $coin_address;
+    public $users;
+    
+
+    protected $listeners = ['userCreated' => 'render'];
+
     
     public $rules = [
         'username' => 'required|alpha_dash|unique:tbl_users',
         'email' => 'required|email|unique:tbl_users',
-        'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+        'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$@#%]).*$/',
         'mobile' => 'required|integer|unique:tbl_users',
         'mobile_verified'=>'required',
         'country'=>'required',
@@ -44,6 +40,7 @@ class Users extends Component
 
     public function render()
     {
+        $this->users = UsersModel::where(array('status'=>'0'))->get();
         return view('livewire.module.users');
     }
 
@@ -72,8 +69,8 @@ class Users extends Component
             $data = $request->json()->all();
             $this->rules['ref_code'] = [new Referal($data)];
             $validator = Validator::make($data, $this->rules);
-            if ($validator->passes()) {
-                if($ref_setting->isReferalActive == 1){   
+            if ($validator->passes()){
+                if($ref_setting->isReferalActive == 1){
                     $ref_user =  UsersModel::where('ref_code','=',strtolower($data['ref_code']))->where('status','0')->first();
                     if(isset($ref_user->u_id)){
                         $data['ref_id'] = $ref_user->u_id;    
@@ -117,41 +114,14 @@ class Users extends Component
                 $response['message'] = $validator->errors()->first();
                 return response()->json($response);
             }
-        }else{
-            $data = $this->validate([
-                'username' => 'required|alpha_dash|unique:tbl_users',
-                'email' => 'required|email|unique:tbl_users',
-                'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/|confirmed',
-                'password_confirmation'=>'required|min:6',
-                'mobile' => 'required|integer',
-                'point' => 'required|integer',
-                'coin' => 'required|integer',
-                'ref_code'=>'required|unique:tbl_users',
-                'coin_address'=>'required|unique:tbl_users',
-            ]);
-            $userModel::create([
-                'username' => strtolower($data['username']),
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-                'mobile'=>$data['mobile'],
-                'coin_address'=>$data['coin_address'],
-                'points'=>$data['point'],
-                'coins'=>$data['coin'],
-                'ref_code'=>$data['ref_code'],
-                'ref_id'=>isset($data['ref_id'])?$data['ref_id']:NULL,
-                'country'=>isset($data['country'])?$data['country']:NULL,
-                'api_token'=>Str::random(60),
-                'verification_code'=>Str::random(80),
-                'reset_token'=>Str::random(80),
-                'device_id'=>Str::random(8),
-                ]
-            );
-            $this->reset();
-            $this->dispatchBrowserEvent(
-                'alert', ['type' => 'success',  'message' => 'User Created']);
-            
         }   
     }
+
+
+    public function openEdit($u_id){
+        $this->emit('openEdit',$u_id);
+    }
+
 
     public function insert_point_history($parent_user,$child_user){
         $settings =  new SettingsModel;
@@ -261,10 +231,9 @@ class Users extends Component
                 'mobile_verified'=>'required',
                 'country'=>'required',
             ];
-            $data['ref_code'] = $data['username'];
+            $data['ref_code'] = strtolower($data['username']);
             $validator = Validator::make($data, $rules);
             if ($validator->passes()) {
-                $data['ref_code'] = $data['username'];
                 UsersModel::where('u_id',$id)->update($data);
                 $response['response'] = 'User Updated Successfully';
                 $response['success'] = true;
@@ -524,5 +493,9 @@ class Users extends Component
         $conversion_history = ConversionModel::where(array('u_id'=>$request->u_id))->get();
         return response()->json(['success'=>true,'data'=>$conversion_history]); 
     }
+
+    
+
+
 
 }

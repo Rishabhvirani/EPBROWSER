@@ -7,6 +7,8 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
         @livewireStyles
+
+
         <link href="{{ asset('assets/css/loader.css') }}" rel="stylesheet" type="text/css" />
         <script src="{{ asset('assets/js/loader.js') }}"></script>
         
@@ -17,7 +19,11 @@
         <link href="{{ asset('plugins/notification/snackbar/snackbar.min.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/components/tabs-accordian/custom-tabs.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/forms/switches.css') }}" rel="stylesheet" type="text/css" />
-        
+        <link rel="stylesheet" href="{{ asset('assets/css/intlTelInput.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/datatables.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/dt-global_style.css') }}">
+
     </head>
     <body>
         <div id="load_screen"> 
@@ -68,21 +74,45 @@
     <script src="{{ asset('assets/js/app.js') }}"></script>
     <script src="{{ asset('plugins/notification/snackbar/snackbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/components/notification/custom-snackbar.js') }}"></script>
+    
+    <script src="{{ asset('assets/js/custom.js') }}"></script>
+    <script src="{{ asset('plugins/table/datatable/datatables.js') }}"></script>
+    <script>
+        window.addEventListener('alert', event => { 
+            if(event.detail.type == 'danger'){
+                Snackbar.show({
+                    text: event.detail.message,
+                    pos: 'bottom-right',
+                    duration:5000,
+                    actionTextColor: '#fff',
+                    backgroundColor: 'red'
+                });
+            }else{
+                    Snackbar.show({
+                    text: event.detail.message,
+                    pos: 'bottom-right',
+                    duration:5000,
+                    actionTextColor: '#fff',
+                    backgroundColor: '#8dbf42'
+                });
+            }
+            
+        });
+        window.addEventListener('openform',event=>{
+            $('#create').modal('show');
+        });
+        window.addEventListener('closeform',event=>{
+            $('#create').modal('hide');
+            $('#edit').modal('hide');
+        });
+        $(document).ready( function () {
+            $('#table').DataTable({
+            });
+        });
+    </script>
     <script>
         $(document).ready(function() {
             App.init();
         });
-    </script>
-    <script src="{{ asset('assets/js/custom.js') }}"></script>
-    <script>
-        window.addEventListener('alert', event => { 
-            Snackbar.show({
-                text: event.detail.message,
-                pos: 'bottom-right',
-                duration:5000,
-                actionTextColor: '#fff',
-                backgroundColor: '#8dbf42'
-            });
-        })
     </script>
 </html>
