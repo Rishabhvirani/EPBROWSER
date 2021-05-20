@@ -26,6 +26,7 @@ class Authkey
             'users/check_user_details',
             'settings/get_settings',
             'settings/get_ad_settings',
+            'settings/get_bookmarks',
             
         );
         if(!in_array($slug,$except)){

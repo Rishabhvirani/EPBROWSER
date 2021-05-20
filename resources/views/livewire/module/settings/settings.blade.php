@@ -9,7 +9,7 @@
                         </div>                                                                        
                     </div>
                 </div>
-                <div class="widget-content widget-content-area">
+                <div class="widget-content">
                     <div class="row mb-4 mt-3">
                         <div class="col-sm-3 col-12">
                             <div class="nav flex-column nav-pills mb-sm-0 mb-3 text-center mx-auto" id="v-line-pills-tab" role="tablist" aria-orientation="vertical">
@@ -33,6 +33,7 @@
                                 <div class="tab-pane fade show" id="general" role="tabpanel" aria-labelledby="v-line-pills-general-tab">
                                 @livewire('forms.settings.general')
                                 </div>
+                                
                             </div>
                         </div>
                     </div>

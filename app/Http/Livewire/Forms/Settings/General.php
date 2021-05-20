@@ -11,7 +11,7 @@ class General extends Component
     public $isWithdrwalEnabled = false;
     public $label = 'general';
     public $setting;
-
+    
 
     public function mount(){
         $this->setting =  new SettingsModel;

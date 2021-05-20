@@ -24,7 +24,6 @@ class Users extends Component
     
 
     protected $listeners = ['userCreated' => 'render'];
-
     
     public $rules = [
         'username' => 'required|alpha_dash|unique:tbl_users',

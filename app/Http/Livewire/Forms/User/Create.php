@@ -9,8 +9,6 @@ use App\Rules\Referal;
 use App\Models\SettingsModel;
 use Monarobase\CountryList\CountryListFacade;
 
-
-
 class Create extends Component
 {
     public $state = [];

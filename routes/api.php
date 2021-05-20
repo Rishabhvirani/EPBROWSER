@@ -32,7 +32,9 @@ Route::prefix('users')->group(function () {
         Route::post('/convert_points',[Users::class,'convert_points']);
         Route::post('/get_conversion_history',[Users::class,'get_conversion_history']);
         Route::post('/resend_email_verification',[Users::class,'resend_email_verification']);
+        
     });
+    
     Route::post('/check_user_details',[Users::class,'check_user_details']);
     Route::post('/register',[Users::class,'register']);
     Route::post('/login',[Users::class,'login']);    
@@ -44,6 +46,7 @@ Route::prefix('users')->group(function () {
 Route::prefix('settings')->group(function () {
     Route::post('/get_settings',[Settings::class,'get_settings']);
     Route::post('/get_ad_settings',[Settings::class,'get_ad_settings']);
+    Route::post('/get_bookmarks',[Settings::class,'get_bookmarks']);
 });
 
 
