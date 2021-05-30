@@ -17,6 +17,12 @@
             </label>
         </div>
     </div>
+    <div class="form-group row mb-4">
+        <label for="appVersion" class="col-xl-2 col-sm-3 col-sm-2 col-form-label">App Version</label>
+        <div class="col-xl-10 col-lg-9 col-sm-10">
+            <input type="text" class="form-control" id="appVersion" wire:model="appVersion" placeholder="Enter Live App version" required>
+        </div>
+    </div>
 
     <div class="text-right">
         <button type="submit" class="btn btn-primary mt-3">Submit</button>

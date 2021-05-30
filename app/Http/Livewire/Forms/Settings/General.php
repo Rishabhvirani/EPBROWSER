@@ -9,6 +9,7 @@ class General extends Component
 {
     public $isNotificationEnabled = false;
     public $isWithdrwalEnabled = false;
+    public $appVersion = '';
     public $label = 'general';
     public $setting;
     
@@ -19,6 +20,7 @@ class General extends Component
         $gen_setting = $this->setting->get_settings($data);
         $this->isNotificationEnabled = $gen_setting->isNotificationEnabled == '0' ? false:true;
         $this->isWithdrwalEnabled = $gen_setting->isWithdrwalEnabled == '0' ? false:true;
+        $this->appVersion = $gen_setting->appVersion;
     }
 
     public function render()
@@ -30,11 +32,14 @@ class General extends Component
         $data = $this->validate([
             'isNotificationEnabled' => 'required',
             'isWithdrwalEnabled' => 'required',
+            'appVersion' => 'required',
         ]);
+        
         SettingsModel::where(array('name'=>'isNotificationEnabled','label'=>$this->label))->update(array('value'=>$this->isNotificationEnabled));
         SettingsModel::where(array('name'=>'isWithdrwalEnabled','label'=>$this->label))->update(array('value'=>$this->isWithdrwalEnabled));
+        SettingsModel::where(array('name'=>'appVersion','label'=>$this->label))->update(array('value'=>$this->appVersion));
         $this->mount();
-        $this->dispatchBrowserEvent('alert', ['type' => 'success',  'message' => 'Notification Setting updated']);
+        $this->dispatchBrowserEvent('alert', ['type' => 'success',  'message' => 'General Setting updated']);
     }
 
 }
