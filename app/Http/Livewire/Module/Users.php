@@ -28,13 +28,16 @@ class Users extends Component
     public $rules = [
         'username' => 'required|alpha_dash|unique:tbl_users',
         'email' => 'required|email|unique:tbl_users',
-        'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$@#%]).*$/',
+        'password' => 'required|min:8|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$@#%]).*$/',
         'mobile' => 'required|integer|unique:tbl_users',
         'mobile_verified'=>'required',
         'country'=>'required',
         'lat'=>'required',
         'long'=>'required',
         'device_id'=>'required|unique:tbl_users',
+    ];
+    public $messages = [
+        'password.regex' => 'Your password must contain at least one number, special character and have a mixture of uppercase and lowercase letters.',
     ];
 
     public function render()
@@ -67,7 +70,7 @@ class Users extends Component
             $response = array('response' => '','success'=>false);
             $data = $request->json()->all();
             $this->rules['ref_code'] = [new Referal($data)];
-            $validator = Validator::make($data, $this->rules);
+            $validator = Validator::make($data, $this->rules,$this->messages);
             if ($validator->passes()){
                 if($ref_setting->isReferalActive == 1){
                     $ref_user =  UsersModel::where('ref_code','=',strtolower($data['ref_code']))->where('status','0')->first();
@@ -184,9 +187,9 @@ class Users extends Component
                 return response()->json(['success'=>false, 'message' => 'Your Account has been banned by the Administrator']);
             }
             // if(){
-            if($user->device_id != $device_id && config('app.env') === 'production'){
-                return response()->json(['success'=>false, 'message' => 'Please Log in Throught the registered Device']);
-            }
+            // if($user->device_id != $device_id && config('app.env') === 'production'){
+            //     return response()->json(['success'=>false, 'message' => 'Please Log in Throught the registered Device']);
+            // }
             $user = $user->where('u_id', $user->u_id)->update(['api_token'=>Str::random(60)]);
             $user = UsersModel::where('username', '=', $username)->first();
             return response()->json(['success'=>true,'message'=>'Login Successfully', 'data' => array(
@@ -255,8 +258,8 @@ class Users extends Component
                 return response()->json(['success'=>false, 'message' => "Password Doesn't Match"]);
             }
             else{
-                $rules = ['password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',];
-                $validator = Validator::make($data, $rules);
+                $rules = ['password' => 'required|min:8|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$@#%]).*$/',];
+                $validator = Validator::make($data, $rules,$this->messages);
                 if ($validator->passes()) {
                     $token = Str::random(60);
                     if(UsersModel::where('u_id','=',$request->u_id)->update(['password'=>Hash::make($data['password']),'api_token'=>$token])){
@@ -329,8 +332,8 @@ class Users extends Component
             if(!isset($user)){
                 return response()->json(['success'=>false, 'message' => 'Something Went Wrong']);
             }
-            $rules = ['password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',];
-            $validator = Validator::make($data, $rules);
+            $rules = ['password' => 'required|min:8|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$@#%]).*$/',];
+            $validator = Validator::make($data, $rules,$this->messages);
             if ($validator->passes()) {
                 
                 if(UsersModel::where('u_id','=',$user->u_id)->update(['password'=>Hash::make($data['password'])])){
