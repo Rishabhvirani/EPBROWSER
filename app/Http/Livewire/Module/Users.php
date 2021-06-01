@@ -341,7 +341,8 @@ class Users extends Component
                 }
                 return response()->json(['success'=>false, 'message' => 'Something Went Wrong']);
             }else{
-                $response['response'] = $validator->errors()->messages();
+                $response['success'] = false;
+                $response['message'] = $validator->errors()->first();
                 return response()->json($response);
             }
         }
