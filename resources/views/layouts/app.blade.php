@@ -96,8 +96,14 @@
                     backgroundColor: '#8dbf42'
                 });
             }
-            
         });
+
+
+        window.addEventListener('approve',event=>{
+            $('#approve').modal('show');
+        });
+
+
         window.addEventListener('openform',event=>{
             $('#create').modal('show');
         });

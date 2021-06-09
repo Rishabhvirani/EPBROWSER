@@ -22,4 +22,7 @@ class NotificationModel extends Model
         'ref_type',
         'is_read',
     ];
+    
+
 }
+

@@ -3,6 +3,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Module\Users;
 use App\Http\Livewire\Module\Settings\Settings;
 use App\Http\Livewire\Module\Bookmarks;
+use App\Http\Livewire\Module\Withdrawal;
 use Illuminate\Http\Request;
 
 
@@ -26,6 +27,9 @@ Route::get('/', function () {
     return redirect('/login');
 });
 // Route::get('/users',Users::class)->name('Users');
+
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/withdrawal', Withdrawal::class)->name('Withdrawal');
 Route::middleware(['auth:sanctum', 'verified'])->get('/bookmarks', Bookmarks::class)->name('Bookmarks');
 Route::middleware(['auth:sanctum', 'verified'])->get('/settings', Settings::class)->name('Settings');
 Route::middleware(['auth:sanctum', 'verified'])->get('/users', Users::class)->name('Users');

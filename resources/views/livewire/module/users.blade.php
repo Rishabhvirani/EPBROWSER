@@ -1,12 +1,10 @@
 <div class="row layout-top-spacing">
     <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
         <div class="widget-content widget-content-area br-6">
-            <div class="text-right">
-            @livewire('forms.user.create')
             
-            </div>
+            @livewire('forms.user.create')
             <div class="table-responsive">
-                <table id="table" class="table table-bordered table-hover dataTable table-highlight-head mb-4" style="width:100%">
+                <table id="table" class="table table-bordered table-hover dataTable table-highlight-head mb-4" style="width:100%" >
                     <thead>
                         <tr>
                             <th>Username</th>
@@ -17,7 +15,7 @@
                             <th>Country</th>
                             <th>Email Verified</th>
                             <th>Mobile Verified</th>
-                            <th >Actions</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,12 +32,12 @@
                             <td>{{$user->email_verified}}</td>
                             <td>{{$user->mobile_verified}}</td>
                             <td>
-                                <span data-toggle="modal" data-target="#edit" wire:click="openEdit('{{ $user->u_id }}')" class="badge badge-warning">Edit</span>
+                                <span data-toggle="modal" data-target="#edit" wire:click="openEdit('{{ $user->u_id }}')" wire:key="{{ $user->u_id }}" class="badge badge-warning">Edit</span>
                             </td>
                             <!-- <td><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle table-cancel"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></td> -->
                         </tr>
                     <?php } ?>
-                    </tfoot>
+                    </tbody>
                 </table>
             </div>
         </div>

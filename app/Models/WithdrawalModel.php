@@ -16,6 +16,7 @@ class WithdrawalModel extends Model
         'epc',
         'epc_address',
         'transaction_id',
+        'url',
         'status',
     ];
 
