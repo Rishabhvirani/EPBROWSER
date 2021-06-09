@@ -11,7 +11,7 @@
     <div class="form-group row mb-4">
         <label for="points" class="col-xl-2 col-sm-3 col-sm-2 col-form-label">Points</label>
         <div class="col-xl-10 col-lg-9 col-sm-10">
-            <input type="number" class="form-control" id="points" wire:model="points" placeholder="Enter Points" required>
+            <input type="number" class="form-control" id="points" wire:model="points"  step=".01" placeholder="Enter Points" required>
         </div>
     </div>
     

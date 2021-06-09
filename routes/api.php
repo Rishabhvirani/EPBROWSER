@@ -32,6 +32,8 @@ Route::prefix('users')->group(function () {
         Route::post('/convert_points',[Users::class,'convert_points']);
         Route::post('/get_conversion_history',[Users::class,'get_conversion_history']);
         Route::post('/resend_email_verification',[Users::class,'resend_email_verification']);
+        Route::post('/withdrawal_request',[Users::class,'withdrawal_request']);
+        Route::post('/withdrawal_history',[Users::class,'withdrawal_history']);
         
     });
     
