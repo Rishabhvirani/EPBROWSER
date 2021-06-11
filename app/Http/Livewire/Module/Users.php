@@ -501,28 +501,34 @@ class Users extends Component
 
 
     public function withdrawal_request(Request $request){
-
         $data = $request->json()->all();
         $data['u_id'] = $request->u_id;
         $settingModel = new SettingsModel();
         $withdrawal_settings = $settingModel->get_settings(array('label'=>'Withdrawal'));
         $user_data = UsersModel::select('email_Verified','mobile_Verified','usd')->where(array('u_id'=>$request->u_id))->first();
+        
         if($user_data->email_Verified == 0 ){
             return response()->json(['success'=>true,'message'=>'Your Email address must be verified']); 
         }
+
         if($data['usd'] < $withdrawal_settings->MinWithdrawal ){
             return response()->json(['success'=>true,'message'=>'You must have to withdraw minimum ' . $withdrawal_settings->MinWithdrawal . ' USD']); 
         }
+        
         if($data['usd'] > $user_data->usd ){
             return response()->json(['success'=>true,'message'=>'Your cuurent balance is ' .$user_data->usd. ' USD']); 
         }
         $insert_data =  array(
            'user_id'=>$request->u_id,
            'usd'=>$data['usd'],
-           'epc'=> $data['usd']/$withdrawal_settings->epc_rate,
+           'epc'=> $data['usd']/(float)$withdrawal_settings->epc_rate,
            'epc_address'=> $data['epc_address'],
         );
         if(WithdrawalModel::Create($insert_data)){
+            $update_data = array(
+                'usd'=>DB::raw('`usd`-'.$data['usd']),
+            );
+            UsersModel::where(array('u_id'=>$request->u_id))->update($update_data);
             return response()->json(['success'=>true,'message'=>'Your Withdrawal Request has been Generated']); 
         }else{
             return response()->json(['success'=>true,'message'=>'Something went Wrong']); 
