@@ -110,6 +110,7 @@
         window.addEventListener('closeform',event=>{
             $('#create').modal('hide');
             $('#edit').modal('hide');
+            $('#approve').modal('hide');
         });
         $(document).ready( function () {
             $('#table').DataTable({

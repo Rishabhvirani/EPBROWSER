@@ -57,7 +57,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-default" data-dismiss="modal"><i class="flaticon-cancel-12"></i> Discard</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="submit" class="btn btn-primary">Approve</button>
                     </div>
                 </div>  
             </form>

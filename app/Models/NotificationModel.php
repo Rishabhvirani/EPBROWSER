@@ -17,6 +17,7 @@ class NotificationModel extends Model
         'points',
         'usd',
         'coins',   
+        'w_status',
         'timer',
         'data',
         'ref_type',

@@ -11,7 +11,7 @@ class Approve extends Component
 {
 
     public $wh_id;
-    
+    public $receiver;
     public $state=[];
     protected $listeners = ['approve' => 'popform'];
 
@@ -23,7 +23,7 @@ class Approve extends Component
         ->select('tbl_withdrawal_history.*','tbl_users.username','tbl_users.email')
         ->first();
         // dd($this->wh);
-        
+        $this->receiver = $wh->user_id;
         $this->state['username'] = $wh->username;
         $this->state['email'] = $wh->email;
         $this->state['usd'] = $wh->usd;
@@ -41,7 +41,6 @@ class Approve extends Component
 
     public function update(){
 
-        
         $data['transaction_id'] = $this->state['transaction_id'];
         $data['url'] = $this->state['url'];
         $data['status']='1';
@@ -53,23 +52,22 @@ class Approve extends Component
         $validator = Validator::make($data, $rules);
         if ($validator->passes()){    
             WithdrawalModel::where(array('wh_id'=>$this->wh_id))->update($data);  
-            // NotificationModel::create(
-            //     array(
-            //         'receiver'=> '',
-            //         'n_type'=>'w',
-            //         'usd'=>'',
-            //         'coins'=>'',
-            //         'w_status'=>''
-            //     )
-            // )
-            
+            NotificationModel::create(
+                array(
+                    'receiver'=> $this->receiver,
+                    'n_type'=>'w',
+                    'usd'=>$this->state['usd'],
+                    'coins'=>$this->state['epc'],
+                    'w_status'=>'a'
+                )
+            );
+            $this->dispatchBrowserEvent('closeform');
             $this->dispatchBrowserEvent(
                 'alert', ['type' => 'success',  'message' => 'Withdraw request successfully approved and updated']);
+                $this->Redirect('/withdrawal');
         }else{
             $this->dispatchBrowserEvent(
                 'alert', ['type' => 'danger',  'message' => $validator->errors()->first()]);
         }
     }
-
-
 }
