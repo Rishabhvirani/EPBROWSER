@@ -508,15 +508,15 @@ class Users extends Component
         $user_data = UsersModel::select('email_Verified','mobile_Verified','usd')->where(array('u_id'=>$request->u_id))->first();
         
         if($user_data->email_Verified == 0 ){
-            return response()->json(['success'=>true,'message'=>'Your Email address must be verified']); 
+            return response()->json(['success'=>false,'message'=>'Your Email address must be verified']); 
         }
 
         if($data['usd'] < $withdrawal_settings->MinWithdrawal ){
-            return response()->json(['success'=>true,'message'=>'You must have to withdraw minimum ' . $withdrawal_settings->MinWithdrawal . ' USD']); 
+            return response()->json(['success'=>false,'message'=>'You must have to withdraw minimum ' . $withdrawal_settings->MinWithdrawal . ' USD']); 
         }
         
         if($data['usd'] > $user_data->usd ){
-            return response()->json(['success'=>true,'message'=>'Your cuurent balance is ' .$user_data->usd. ' USD']); 
+            return response()->json(['success'=>false,'message'=>'Your cuurent balance is ' .$user_data->usd. ' USD']); 
         }
         $insert_data =  array(
            'user_id'=>$request->u_id,
@@ -531,7 +531,7 @@ class Users extends Component
             UsersModel::where(array('u_id'=>$request->u_id))->update($update_data);
             return response()->json(['success'=>true,'message'=>'Your Withdrawal Request has been Generated']); 
         }else{
-            return response()->json(['success'=>true,'message'=>'Something went Wrong']); 
+            return response()->json(['success'=>false,'message'=>'Something went Wrong']); 
         }
     }
 
