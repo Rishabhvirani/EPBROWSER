@@ -562,8 +562,20 @@ class Users extends Component
         }
     }
 
-
-    public function claim_timer(){
-
+    public function claim_timer(Request $request){
+        $t_details =TimerModel::where(array('t_id'=>$request->t_id))->first();
+        $update_data = array(
+            'status'=> '1'
+        );
+        $today = '%'.Date('Y-m-d').'%';
+        $counter = TimerHistoryModel::where(array('timer_id'=>$request->t_id,'user_id'=>$request->u_id))->where('created_at','like',$today)->update($update_data);
+        dd($counter);
+        
+        // update timer list on 
+        // insert points point hisotry table
+        // persentwise referal to the parent
+        // add Notification
+        
     }
+
 }

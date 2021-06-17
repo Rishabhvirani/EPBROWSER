@@ -10,7 +10,7 @@ class TimerHistoryModel extends Model
     use HasFactory;
     protected $table = 'tbl_timer_history';
     protected $primaryKey = 'th_id';
-    public $timestamps = true;
+    // public $timestamps = true;
 
     protected $fillable = [
         'user_id',
