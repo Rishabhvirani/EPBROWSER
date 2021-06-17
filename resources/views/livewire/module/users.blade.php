@@ -1,7 +1,6 @@
 <div class="row layout-top-spacing">
     <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
         <div class="widget-content widget-content-area br-6">
-            
             @livewire('forms.user.create')
             <div class="table-responsive">
                 <table id="table" class="table table-bordered table-hover dataTable table-highlight-head mb-4" style="width:100%" >

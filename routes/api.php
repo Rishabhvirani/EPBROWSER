@@ -34,6 +34,7 @@ Route::prefix('users')->group(function () {
         Route::post('/resend_email_verification',[Users::class,'resend_email_verification']);
         Route::post('/withdrawal_request',[Users::class,'withdrawal_request']);
         Route::post('/withdrawal_history',[Users::class,'withdrawal_history']);
+        Route::post('/start_timer',[Users::class,'start_timer']);
         
     });
     
@@ -46,31 +47,8 @@ Route::prefix('users')->group(function () {
 
 
 Route::prefix('settings')->group(function () {
+    Route::post('/get_timers',[Settings::class,'get_timers']);
     Route::post('/get_settings',[Settings::class,'get_settings']);
     Route::post('/get_ad_settings',[Settings::class,'get_ad_settings']);
     Route::post('/get_bookmarks',[Settings::class,'get_bookmarks']);
 });
-
-
-
-
-
-
-
-
-
-
-Route::get('/details',function(){
-    return ['message'=>'hello'];
-});
-
-
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
-
-// Route::middleware('auth:buser')->post('/users',function(Request $request){
-    // return $request-
-// });

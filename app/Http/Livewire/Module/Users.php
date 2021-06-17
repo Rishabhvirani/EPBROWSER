@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Livewire\Module;
 use App\Models\UsersModel;
+use App\Models\TimerModel;
+use App\Models\TimerHistoryModel;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -399,7 +401,6 @@ class Users extends Component
                 }
                 return $data;
             });
-        
         return response()->json(['success'=>true, 'data' => $pointHistory]);
     }
 
@@ -542,4 +543,27 @@ class Users extends Component
         return response()->json(['success'=>true,'data'=>$withdrawal_history]);
     }
 
+    public function start_timer(Request $request){
+        $t_details =TimerModel::where(array('t_id'=>$request->t_id))->first();
+        $today = '%'.Date('Y-m-d').'%';
+        $counter = TimerHistoryModel::where(array('timer_id'=>$request->t_id,'user_id'=>$request->u_id))->where('created_at','like',$today)->get()->count();
+        if($counter > 0){
+            return response()->json(['success'=>false,'message'=>'Timer is already Started']);
+        }
+        $data = array(
+            'user_id'=>$request->u_id,
+            'timer_id'=>$t_details->timer,
+            'points'=>$t_details->points,
+        );
+        if(TimerHistoryModel::create($data)){
+            return response()->json(['success'=>true,'message'=>'Timer Started Successfully']);
+        }else{
+            return response()->json(['success'=>false,'message'=>'Something went wrong']);
+        }
+    }
+
+
+    public function claim_timer(){
+
+    }
 }

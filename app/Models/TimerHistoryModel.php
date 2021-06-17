@@ -5,19 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class WithdrawalModel extends Model
+class TimerHistoryModel extends Model
 {
     use HasFactory;
-    protected $table = 'tbl_withdrawal_history';
-    protected $primaryKey = 'wh_id';
+    protected $table = 'tbl_timer_history';
+    protected $primaryKey = 'th_id';
+    public $timestamps = true;
+
     protected $fillable = [
         'user_id',
-        'usd',
-        'epc',
-        'epc_address',
-        'transaction_id',
-        'url',
-        'status',
+        'timer_id',
+        'points',
     ];
 
     protected $dates = [
@@ -25,11 +23,8 @@ class WithdrawalModel extends Model
         'updated_at', 
     ];
 
-
     protected $casts = [
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
-
-    
 }

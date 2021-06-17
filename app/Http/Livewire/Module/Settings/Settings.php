@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Module\Settings;
 use App\Models\SettingsModel;
+use App\Models\TimerModel;
 use Livewire\Component;
 use Illuminate\Http\Request;
 use App\Models\BookmarksModel;
@@ -34,5 +35,10 @@ class Settings extends Component
         $response['response'] = $settings;
         return response()->json($response);
     }
-    
+
+    public function get_timers(){
+        $data = TimerModel::where(array('active'=>'1'))->select('t_id','timer','points','active')->get();
+        return response()->json(['success'=>true, 'data' => $data]);
+    }
+
 }
