@@ -36,6 +36,7 @@ Route::prefix('users')->group(function () {
         Route::post('/withdrawal_history',[Users::class,'withdrawal_history']);
         Route::post('/start_timer',[Users::class,'start_timer']);
         Route::post('/claim_timer',[Users::class,'claim_timer']);
+        Route::post('/get_timer',[Users::class,'get_timer']);
         
     });
     

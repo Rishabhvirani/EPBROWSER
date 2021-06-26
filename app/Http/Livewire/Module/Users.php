@@ -673,4 +673,27 @@ class Users extends Component
         
     }
 
+
+    public function get_timer(Request $request){
+        // dd();
+        $user_id = $request->u_id;
+        $dataa = TimerModel::where(array('active'=>'1'))->select('t_id','timer','points','active')
+        ->get()->map(function($data) use ($user_id) {
+            if(!$data->claim){
+                $today = '%'.Date('Y-m-d').'%';
+                $T_History = TimerHistoryModel::where(array('timer_id'=>$data->t_id,'user_id'=>$user_id))->where('created_at','like',$today);
+                if($T_History->count() == 1){
+                    $data->points = $T_History->first()->points;
+                    $data->claim = $T_History->first()->status == '1' ? true : false ;
+                }else{
+                    $data->running = false;
+                    $data->claim = false;
+                }
+            }        
+            return $data;
+        });
+        return response()->json(['success'=>true,'data'=>$dataa]);
+    }
+
+
 }
