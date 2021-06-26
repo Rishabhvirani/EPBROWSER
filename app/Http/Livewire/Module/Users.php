@@ -564,17 +564,112 @@ class Users extends Component
 
     public function claim_timer(Request $request){
         $t_details =TimerModel::where(array('t_id'=>$request->t_id))->first();
+        $user =  UsersModel::where(array('u_id'=>$request->u_id))->first();
+        $parent_user =  UsersModel::where(array('u_id'=>$user->ref_id))->first();
+        
+        if($user->ref_id != '' || $user->ref_id != null){
+            $settings =  new SettingsModel;
+            $gendata['label'] = 'general';
+            $gen_setting = $settings->get_settings($gendata);
+            $parent_points = (float) $t_details->points * $gen_setting->TimerParentEarning / 100;
+            
+            $child_points =(float) $t_details->points - $parent_points;
+            $update_data = array(
+                'status'=> '1'
+            );
+            $today = '%'.Date('Y-m-d').'%';
+            $claim = TimerHistoryModel::where(array('timer_id'=>$request->t_id,'user_id'=>$request->u_id))->where('created_at','like',$today)->update($update_data);
+            if($claim){
+                // child ////////////////////////////////////////////////////////////////////////////////////////
+                PointHistoryModel::create(
+                    array(
+                        'user_id'=>$request->u_id,  
+                        'point'=>$child_points,
+                        'earn_type'=>'t',
+                        'ref_type'=>'c',
+                        'timer_id'=>$request->t_id
+                    )
+                );
+
+                $update_user_points = array(
+                    'points'=>$user->points+$child_points
+                );
+                $user->update($update_user_points);
+
+                NotificationModel::create(
+                    array(
+                        'receiver'=>$user->u_id,
+                        'n_type'=>'t',
+                        'ref_type'=>'c',
+                        'points'=>$child_points,
+                        'timer'=>$request->t_id,
+                    )
+                );
+
+                // Parent //////////////////////////////////////////////////////////////////////////
+                PointHistoryModel::create(
+                    array(
+                        'user_id'=>$user->ref_id,  
+                        'point'=>$parent_points,
+                        'earn_type'=>'r',
+                        'ref_type'=>'p',
+                        'timer_id'=>$request->t_id
+                    )
+                );
+
+                $update_parent_points = array(
+                    'points'=>$parent_user->points + $parent_points,
+                );
+
+                UsersModel::where(array('u_id'=>$user->ref_id))->update($update_parent_points);
+
+                NotificationModel::create(
+                    array(
+                        'receiver'=>$user->ref_id,
+                        'n_type'=>'t',
+                        'ref_type'=>'p',
+                        'points'=>$parent_points,
+                        'timer'=>$request->t_id,
+                    )
+                );
+            }
+            return response()->json(['success'=>true,'message'=>'Congratulations, you have complited timer']);
+        }
+        
         $update_data = array(
             'status'=> '1'
         );
         $today = '%'.Date('Y-m-d').'%';
-        $counter = TimerHistoryModel::where(array('timer_id'=>$request->t_id,'user_id'=>$request->u_id))->where('created_at','like',$today)->update($update_data);
-        dd($counter);
-        
-        // update timer list on 
-        // insert points point hisotry table
-        // persentwise referal to the parent
-        // add Notification
+        $claim = TimerHistoryModel::where(array('timer_id'=>$request->t_id,'user_id'=>$request->u_id))->where('created_at','like',$today)->update($update_data);
+        if($claim){
+            PointHistoryModel::create(
+                    array(
+                        'user_id'=>$request->u_id,  
+                        'point'=>$t_details->points,
+                        'earn_type'=>'t',
+                        'ref_type'=>'c',
+                        'timer_id'=>$request->t_id
+                    )
+                );
+
+            $update_user_points = array(
+                'points'=>$user->points+$t_details->points
+            );
+
+            $user->update($update_user_points);
+
+            NotificationModel::create(
+                array(
+                    'receiver'=>$user->u_id,
+                    'n_type'=>'t',
+                    'ref_type'=>'c',
+                    'points'=>$t_details->points,
+                    'timer'=>$request->t_id,
+                )
+            );
+        }
+
+        return response()->json(['success'=>true,'message'=>'Congratulations, you have complited timer']);
         
     }
 
