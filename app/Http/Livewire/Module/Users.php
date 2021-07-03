@@ -13,7 +13,6 @@ use App\Models\PointHistoryModel;
 use App\Models\NotificationModel;
 use App\Models\WithdrawalModel;
 use App\Models\ConversionModel;
-// use App\Mail\OrderShipped;
 use Illuminate\Support\Facades\DB;
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
@@ -369,7 +368,7 @@ class Users extends Component
             }else{
                 $data['ref_user_count'] = $user->count();
                 $data['ref_user_data'] = $user->get();
-                $user_data;
+                
                 $ref_user_data = $user->get();
                 foreach($ref_user_data as $i=>$ref_user){   
                     $data['ref_user_data'][$i]->email = $this->star_email($ref_user->email);
@@ -394,7 +393,7 @@ class Users extends Component
     }
 
     public function get_point_hisotry(Request $request){
-        $pointHistory = PointHistoryModel::where(array('user_id'=>$request->u_id,'status'=>'0'))->get()->map(
+        $pointHistory = PointHistoryModel::where(array('user_id'=>$request->u_id,'status'=>'0'))->get()->OrderBy('ph_id','desc')->map(
             function($data) {
                 if(!$data->timer_id){
                     $data->timer_id = "";
@@ -446,7 +445,7 @@ class Users extends Component
     }
 
     public function seen_notifications(Request $request){
-        $unseen_count = NotificationModel::where(array('receiver'=>$request->u_id,'is_read'=>'0'))->update(array('is_read'=>'1'));
+        NotificationModel::where(array('receiver'=>$request->u_id,'is_read'=>'0'))->update(array('is_read'=>'1'));
         return response()->json(['success'=>true]); 
     }
 
@@ -684,6 +683,7 @@ class Users extends Component
                 $T_History = TimerHistoryModel::where(array('timer_id'=>$data->t_id,'user_id'=>$user_id))->where('created_at','like',$today);
                 if($T_History->count() == 1){
                     $data->points = $T_History->first()->points;
+                    $data->running = $T_History->first()->status == '0' ? true : false ;
                     $data->claim = $T_History->first()->status == '1' ? true : false ;
                 }else{
                     $data->running = false;

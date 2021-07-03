@@ -38,13 +38,7 @@ class Timer extends Component
             'active'=> $this->timers[$id]['active'] == false ? '0' : '1',
         );
         TimerModel::where(array('t_id'=>$tid))->update($data);
+        $this->dispatchBrowserEvent('alert', ['type' => 'success',  'message' => "Timer $tid Updated Successfully"]);
         $this->mount();
     }
-
-    public function change($id){
-        
-        $tid = $this->timers[$id]['t_id'];
-        $lasttimer = $this->timers[$total_timer-1]['t_id'];
-    }
-
 }
