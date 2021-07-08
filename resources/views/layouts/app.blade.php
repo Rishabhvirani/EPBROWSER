@@ -76,50 +76,7 @@
     <script src="{{ asset('assets/js/components/notification/custom-snackbar.js') }}"></script>
     
     <script src="{{ asset('assets/js/custom.js') }}"></script>
+    <script src="{{ asset('assets/js/main.js') }}"></script>
     <script src="{{ asset('plugins/table/datatable/datatables.js') }}"></script>
-    <script>
-        window.addEventListener('alert', event => { 
-            if(event.detail.type == 'danger'){
-                Snackbar.show({
-                    text: event.detail.message,
-                    pos: 'bottom-right',
-                    duration:5000,
-                    actionTextColor: '#fff',
-                    backgroundColor: 'red'
-                });
-            }else{
-                    Snackbar.show({
-                    text: event.detail.message,
-                    pos: 'bottom-right',
-                    duration:5000,
-                    actionTextColor: '#fff',
-                    backgroundColor: '#8dbf42'
-                });
-            }
-        });
-
-
-        window.addEventListener('approve',event=>{
-            $('#approve').modal('show');
-        });
-
-
-        window.addEventListener('openform',event=>{
-            $('#create').modal('show');
-        });
-        window.addEventListener('closeform',event=>{
-            $('#create').modal('hide');
-            $('#edit').modal('hide');
-            $('#approve').modal('hide');
-        });
-        $(document).ready( function () {
-            $('#table').DataTable({
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            App.init();
-        });
-    </script>
+    
 </html>

@@ -44,8 +44,43 @@ class Users extends Component
 
     public function render()
     {
-        $this->users = UsersModel::where(array('status'=>'0'))->get();
+        // $this->users = UsersModel::where(array('status'=>'0'))->get();
         return view('livewire.module.users');
+    }
+
+    public function get_users(Request $request){
+        
+        $users = UsersModel::where(array('status'=>'0'))->get();
+
+        $search = $request->query('search', array('value' => '', 'regex' => false));
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(1, 'asc'));  
+        
+            // view('products.actions', ['product' => $product])->render(),
+        $filter = $search['value'];
+        $json = array(
+            'draw' => $draw,
+            'recordsTotal' => 1000,
+            'recordsFiltered' => 20,
+            'data' => [],
+        );
+        foreach ($users as $user) {
+
+            $json['data'][] = [
+                $user->username,
+                $user->email,
+                $user->mobile,
+                $user->points,
+                $user->usd,
+                $user->country,
+                $user->email_verified,
+                $user->mobile_verified,
+                'action'
+            ];
+        }
+        return $json;
     }
 
     public function check_user_details(Request $request){
@@ -674,7 +709,6 @@ class Users extends Component
 
 
     public function get_timer(Request $request){
-        // dd();
         $user_id = $request->u_id;
         $dataa = TimerModel::where(array('active'=>'1'))->select('t_id','timer','points','active')
         ->get()->map(function($data) use ($user_id) {

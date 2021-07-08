@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 
 
 Route::get('/verify_email/{id}',[Users::class,'verify_email']);
+Route::POST('users/get_users',[Users::class,'get_users']);
 
 Route::get('/', function () {
     return redirect('/login');
