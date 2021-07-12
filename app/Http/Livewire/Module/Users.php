@@ -577,8 +577,19 @@ class Users extends Component
     }
 
     public function start_timer(Request $request){
-        $t_details =TimerModel::where(array('t_id'=>$request->t_id))->first();
         $today = '%'.Date('Y-m-d').'%';
+        $todaystimer = TimerHistoryModel::where(array('user_id'=>$request->u_id))->where('created_at','like',$today)->OrderBy('th_id','DESC')->first();
+        
+        if($todaystimer->status == 0){
+            return response()->json(['success'=>false,'message'=>"Timer $todaystimer->timer_id is already Running"]);
+        }
+        if(!isset($todaystimer) || $todaystimer == null){
+            $request->t_id = 1;
+        }else if($todaystimer->status == 1){
+            $request->t_id = $todaystimer->timer_id + 1;
+        }
+
+        $t_details =TimerModel::where(array('t_id'=>$request->t_id))->first();
         $counter = TimerHistoryModel::where(array('timer_id'=>$request->t_id,'user_id'=>$request->u_id))->where('created_at','like',$today)->get()->count();
         if($counter > 0){
             return response()->json(['success'=>false,'message'=>'Timer is already Started']);
@@ -589,18 +600,25 @@ class Users extends Component
             'points'=>$t_details->points,
         );
         if(TimerHistoryModel::create($data)){
-            return response()->json(['success'=>true,'message'=>'Timer Started Successfully']);
+            return response()->json(['success'=>true,'message'=>"Timer $request->t_id Started Successfully"]);
         }else{
             return response()->json(['success'=>false,'message'=>'Something went wrong']);
         }
     }
 
     public function claim_timer(Request $request){
+        $today = '%'.Date('Y-m-d').'%';
+        $todaystimer = TimerHistoryModel::where(array('user_id'=>$request->u_id))->where('created_at','like',$today)->OrderBy('th_id','DESC')->first();
+        $request->t_id = $todaystimer->timer_id;
+        // dd($todaystimer->status);
+        if($todaystimer->status == "1" ){
+            return response()->json(['success'=>false,'message'=>"Timer $todaystimer->timer_id is already Claimed"]);
+        }
         
         $t_details =TimerModel::where(array('t_id'=>$request->t_id))->first();
         $user =  UsersModel::where(array('u_id'=>$request->u_id))->first();
         $parent_user =  UsersModel::where(array('u_id'=>$user->ref_id))->first();
-        
+
         if($user->ref_id != '' || $user->ref_id != null){
             $settings =  new SettingsModel;
             $gendata['label'] = 'general';
@@ -667,7 +685,7 @@ class Users extends Component
                     )
                 );
             }
-            return response()->json(['success'=>true,'message'=>'Congratulations, you have complited timer']);
+            return response()->json(['success'=>true,'message'=>"Congratulations, you have Completed timer $request->t_id"]);
         }
         
         $update_data = array(
@@ -703,7 +721,7 @@ class Users extends Component
             );
         }
 
-        return response()->json(['success'=>true,'message'=>'Congratulations, you have complited timer']);
+        return response()->json(['success'=>true,'message'=>"Congratulations, you have Completed timer $request->t_id"]);
         
     }
 
