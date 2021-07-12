@@ -24,8 +24,10 @@ class Edit extends Component
     }
 
     public function mount(){
+        
         $this->countries = CountryListFacade::getlist('en');
         $this->state['country'] = 'US';
+        
     }
 
     public function update(){
@@ -50,14 +52,12 @@ class Edit extends Component
             }else{
                 $this->dispatchBrowserEvent(
                     'alert', ['type' => 'danger',  'message' => 'Something Went wrong']);
-            }
-                
+            }   
         }else{
             $this->dispatchBrowserEvent(
                 'alert', ['type' => 'danger',  'message' => $validator->errors()->first()]);
         }
     }
-    
     
     public function render()
     {

@@ -32,6 +32,7 @@ $(document).ready(function(){
     });
     
     $('#table').DataTable({
+        responsive: true
     });
 
     $('#usertable').DataTable({
@@ -52,5 +53,8 @@ $(document).ready(function(){
             },
         }
     });    
+
+
+    
     
 });

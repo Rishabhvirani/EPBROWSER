@@ -44,21 +44,18 @@ class Users extends Component
 
     public function render()
     {
-        // $this->users = UsersModel::where(array('status'=>'0'))->get();
+        $this->users = UsersModel::where(array('status'=>'0'))->OrderBy('u_id','DESC')->get();
         return view('livewire.module.users');
     }
 
     public function get_users(Request $request){
         
-        $users = UsersModel::where(array('status'=>'0'))->get();
-
+        $users = UsersModel::where(array('status'=>'0'))->OrderBy('u_id','DESC')->get();
         $search = $request->query('search', array('value' => '', 'regex' => false));
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
         $order = $request->query('order', array(1, 'asc'));  
-        
-            // view('products.actions', ['product' => $product])->render(),
         $filter = $search['value'];
         $json = array(
             'draw' => $draw,
@@ -77,10 +74,14 @@ class Users extends Component
                 $user->country,
                 $user->email_verified,
                 $user->mobile_verified,
-                'action'
+                "<td><span data-toggle='modal' data-target='#edit' wire:click='openEdit($user->u_id)' wire:key='$user->u_id' class='badge badge-warning'>Edit</span></td>",
             ];
         }
         return $json;
+    }
+
+    public function get_user_history(Request $request){
+
     }
 
     public function check_user_details(Request $request){
@@ -156,11 +157,9 @@ class Users extends Component
         }   
     }
 
-
     public function openEdit($u_id){
         $this->emit('openEdit',$u_id);
     }
-
 
     public function insert_point_history($parent_user,$child_user){
         $settings =  new SettingsModel;
@@ -428,7 +427,7 @@ class Users extends Component
     }
 
     public function get_point_hisotry(Request $request){
-        $pointHistory = PointHistoryModel::where(array('user_id'=>$request->u_id,'status'=>'0'))->get()->OrderBy('ph_id','desc')->map(
+        $pointHistory = PointHistoryModel::where(array('user_id'=>$request->u_id,'status'=>'0'))->OrderBy('ph_id','desc')->get()->map(
             function($data) {
                 if(!$data->timer_id){
                     $data->timer_id = "";
@@ -597,6 +596,7 @@ class Users extends Component
     }
 
     public function claim_timer(Request $request){
+        
         $t_details =TimerModel::where(array('t_id'=>$request->t_id))->first();
         $user =  UsersModel::where(array('u_id'=>$request->u_id))->first();
         $parent_user =  UsersModel::where(array('u_id'=>$user->ref_id))->first();
@@ -605,9 +605,9 @@ class Users extends Component
             $settings =  new SettingsModel;
             $gendata['label'] = 'general';
             $gen_setting = $settings->get_settings($gendata);
-            $parent_points = (float) $t_details->points * $gen_setting->TimerParentEarning / 100;
+            $parent_points = (float) $request->points * $gen_setting->TimerParentEarning / 100;
             
-            $child_points =(float) $t_details->points - $parent_points;
+            $child_points =(float) $request->points - $parent_points;
             $update_data = array(
                 'status'=> '1'
             );
@@ -679,7 +679,7 @@ class Users extends Component
             PointHistoryModel::create(
                     array(
                         'user_id'=>$request->u_id,  
-                        'point'=>$t_details->points,
+                        'point'=>$request->points,
                         'earn_type'=>'t',
                         'ref_type'=>'c',
                         'timer_id'=>$request->t_id
@@ -687,7 +687,7 @@ class Users extends Component
                 );
 
             $update_user_points = array(
-                'points'=>$user->points+$t_details->points
+                'points'=>$user->points+$request->points
             );
 
             $user->update($update_user_points);
@@ -697,7 +697,7 @@ class Users extends Component
                     'receiver'=>$user->u_id,
                     'n_type'=>'t',
                     'ref_type'=>'c',
-                    'points'=>$t_details->points,
+                    'points'=>$request->points,
                     'timer'=>$request->t_id,
                 )
             );

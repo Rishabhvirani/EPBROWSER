@@ -3,21 +3,41 @@
         <div class="widget-content widget-content-area br-6">
             @livewire('forms.user.create')
             <div class="table-responsive">
-                <table id="usertable" class="table table-bordered table-hover dataTable table-highlight-head mb-4" style="width:100%" >
+                <table id="table" class="table table-bordered table-hover dataTable table-highlight-head mb-4" style="width:100%" >
                     <thead>
                         <tr>
+                            <th>No</th>
                             <th>Username</th>
                             <th>Email</th>
                             <th>Mobile</th>
                             <th>Points</th>
                             <th>Usd</th>
-                            <th>Country</th>
-                            <th>Email Verified</th>
-                            <th>Mobile Verified</th>
+                            <th>CN</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <?php 
+                    foreach($users as $i=>$user){
+                        ?>
+                        <tr>
+                            <td>{{$i+1}}</td>
+                            <td><a href='{{ url("users/history/$user->u_id") }}'>{{$user->username}}</a></td>
+                            <td>{{$user->email}}</td>
+                            <td>{{$user->mobile}}</td>
+                            <td>{{$user->points}}</td>
+                            <td>{{$user->usd}}</td>
+                            <td>{{$user->country}}</td>
+                            <td>{{$user->email_verified}}</td>
+                            <td>{{$user->mobile_verified}}</td>
+                            <td>
+                                <span data-toggle="modal" data-target="#edit" wire:click="openEdit('{{ $user->u_id }}')" wire:key="{{ $user->u_id }}" class="badge badge-warning">Edit</span>
+                            </td>
+                            <!-- <td><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle table-cancel"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></td> -->
+                        </tr>
+                    <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -26,8 +46,6 @@
 </div>
 
 @livewire('forms.user.edit')
-
-
 
 
 
