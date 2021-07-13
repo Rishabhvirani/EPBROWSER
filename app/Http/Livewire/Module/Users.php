@@ -580,14 +580,15 @@ class Users extends Component
         $today = '%'.Date('Y-m-d').'%';
         $todaystimer = TimerHistoryModel::where(array('user_id'=>$request->u_id))->where('created_at','like',$today)->OrderBy('th_id','DESC')->first();
         
-        if($todaystimer->status == 0){
-            return response()->json(['success'=>false,'message'=>"Timer $todaystimer->timer_id is already Running"]);
-        }
         if(!isset($todaystimer) || $todaystimer == null){
             $request->t_id = 1;
         }else if($todaystimer->status == 1){
+            if($todaystimer->status == 0){
+                return response()->json(['success'=>false,'message'=>"Timer $todaystimer->timer_id is already Running"]);
+            }
             $request->t_id = $todaystimer->timer_id + 1;
         }
+        
 
         $t_details =TimerModel::where(array('t_id'=>$request->t_id))->first();
         $counter = TimerHistoryModel::where(array('timer_id'=>$request->t_id,'user_id'=>$request->u_id))->where('created_at','like',$today)->get()->count();
