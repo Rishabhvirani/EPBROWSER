@@ -610,12 +610,13 @@ class Users extends Component
     public function claim_timer(Request $request){
         $today = '%'.Date('Y-m-d').'%';
         $todaystimer = TimerHistoryModel::where(array('user_id'=>$request->u_id))->where('created_at','like',$today)->OrderBy('th_id','DESC')->first();
+        if(!isset($todaystimer) || $todaystimer == null){
+            return response()->json(['success'=>false,'message'=>"No Timer is Started yet on current date"]);
+        }
         $request->t_id = $todaystimer->timer_id;
-        // dd($todaystimer->status);
         if($todaystimer->status == "1" ){
             return response()->json(['success'=>false,'message'=>"Timer $todaystimer->timer_id is already Claimed"]);
         }
-        
         $t_details =TimerModel::where(array('t_id'=>$request->t_id))->first();
         $user =  UsersModel::where(array('u_id'=>$request->u_id))->first();
         $parent_user =  UsersModel::where(array('u_id'=>$user->ref_id))->first();
