@@ -627,7 +627,7 @@ class Users extends Component
             $gen_setting = $settings->get_settings($gendata);
             $parent_points = (float) $request->points * $gen_setting->TimerParentEarning / 100;
             
-            $child_points =(float) $request->points - $parent_points;
+            $child_points =(float) $request->points;
             $update_data = array(
                 'status'=> '1'
             );
