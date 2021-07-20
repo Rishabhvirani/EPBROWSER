@@ -52,6 +52,7 @@ class Edit extends Component
             }else{
                 $this->dispatchBrowserEvent(
                     'alert', ['type' => 'danger',  'message' => 'Something Went wrong']);
+                
             }   
         }else{
             $this->dispatchBrowserEvent(

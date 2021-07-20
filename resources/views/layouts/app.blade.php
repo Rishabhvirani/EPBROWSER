@@ -23,6 +23,7 @@
         <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}"/>
         <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/datatables.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/dt-global_style.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}"/>
 
     </head>
     <body>
@@ -79,4 +80,18 @@
     <script src="{{ asset('assets/js/main.js') }}"></script>
     <script src="{{ asset('plugins/table/datatable/datatables.js') }}"></script>
     
+
+    <script>
+    
+            window.addEventListener('name-updated', event => {
+                $('#table').DataTable({
+                    responsive: true
+                });
+
+            });
+
+    </script>
+
+
+
 </html>

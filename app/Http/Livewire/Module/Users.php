@@ -164,43 +164,47 @@ class Users extends Component
     public function insert_point_history($parent_user,$child_user){
         $settings =  new SettingsModel;
         $ref_setting = $settings->get_settings(array('label'=>'referal'));
-
         
-            PointHistoryModel::create(array(
+            if($ref_setting->childEarning > 0){
+                PointHistoryModel::create(array(
                     'user_id'=>$child_user,
                     'point'=>$ref_setting->childEarning,
                     'earn_type'=>'r',
                     'ref_type'=>'c',
                 ));
+                NotificationModel::create(
+                    array(
+                        'sender'=>$parent_user,
+                        'receiver'=>$child_user,
+                        'n_type'=>'r',
+                        'ref_type'=>'c',
+                        'points'=>$ref_setting->childEarning,
+                    )
+                );
+            }
 
-            NotificationModel::create(
-                array(
-                    'sender'=>$parent_user,
-                    'receiver'=>$child_user,
-                    'n_type'=>'r',
-                    'ref_type'=>'c',
-                    'points'=>$ref_setting->childEarning,
-                )
-            );
 
+            
 
-            PointHistoryModel::create(array(
-                'user_id'=>$parent_user,
-                'point'=>$ref_setting->parentEarning,
-                'earn_type'=>'r',
-                'ref_type'=>'p',
-            ));
-
-            NotificationModel::create(
-                array(
-                    'sender'=>$child_user,
-                    'receiver'=>$parent_user,
-                    'n_type'=>'r',
+            if($ref_setting->parentEarning > 0){
+                PointHistoryModel::create(array(
+                    'user_id'=>$parent_user,
+                    'point'=>$ref_setting->parentEarning,
+                    'earn_type'=>'r',
                     'ref_type'=>'p',
-                    'points'=>$ref_setting->parentEarning,
-                )
-            );
-
+                    'child_id'=>$child_user
+                ));
+    
+                NotificationModel::create(
+                    array(
+                        'sender'=>$child_user,
+                        'receiver'=>$parent_user,
+                        'n_type'=>'r',
+                        'ref_type'=>'p',
+                        'points'=>$ref_setting->parentEarning,
+                    )
+                );
+            }
             return true;
     }
 
@@ -667,7 +671,8 @@ class Users extends Component
                         'point'=>$parent_points,
                         'earn_type'=>'r',
                         'ref_type'=>'p',
-                        'timer_id'=>$request->t_id
+                        'timer_id'=>$request->t_id,
+                        'child_id'=>$request->u_id,
                     )
                 );
 
@@ -751,3 +756,5 @@ class Users extends Component
 
 
 }
+
+

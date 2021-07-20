@@ -18,6 +18,7 @@ class PointHistoryModel extends Model
         'earn_type',
         'ref_type',
         'timer_id',
+        'child_id'
     ];
 
     protected $dates = [

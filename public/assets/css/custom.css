@@ -1,0 +1,14 @@
+.user_dashbaord{
+    display: flex;
+}
+
+.user_dashbaord .widget-content{
+    width:100%;
+    margin:10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.user_dashbaord .widget-content .t-item{
+    flex-direction: column;
+}
