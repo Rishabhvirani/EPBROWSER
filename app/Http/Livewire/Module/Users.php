@@ -593,6 +593,7 @@ class Users extends Component
             $request->t_id = $todaystimer->timer_id + 1;
         }
         
+        
 
         $t_details =TimerModel::where(array('t_id'=>$request->t_id))->first();
         $counter = TimerHistoryModel::where(array('timer_id'=>$request->t_id,'user_id'=>$request->u_id))->where('created_at','like',$today)->get()->count();
@@ -601,7 +602,7 @@ class Users extends Component
         }
         $data = array(
             'user_id'=>$request->u_id,
-            'timer_id'=>$t_details->timer,
+            'timer_id'=>$request->t_id,
             'points'=>$t_details->points,
         );
         if(TimerHistoryModel::create($data)){
