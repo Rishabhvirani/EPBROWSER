@@ -22,9 +22,9 @@ use Illuminate\Http\Request;
 
 
 
-$router->pattern('id', '[0-9]+');
+// $router->pattern('id', '[0-9]+');
 Route::get('/verify_email/{id}',[Users::class,'verify_email']);
-// Route::POST('users/get_users',[Users::class,'get_users']);
+Route::get('users/update_ref_id',[Users::class,'update_ref_id']);
 // Route::middleware(['auth:sanctum', 'verified'])->get('/users/history/{id}', [Users::class,'get_user_history'])->name('User History');
 
 Route::get('/', function () {
