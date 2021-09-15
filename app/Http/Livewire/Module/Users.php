@@ -23,10 +23,7 @@ use Carbon\Carbon;
 class Users extends Component
 {
     public $users;
-    
-
     protected $listeners = ['userCreated' => 'render'];
-    
     public $rules = [
         'username' => 'required|alpha_dash|unique:tbl_users',
         'email' => 'required|email|unique:tbl_users',
@@ -182,10 +179,7 @@ class Users extends Component
                     )
                 );
             }
-
-
             
-
             if($ref_setting->parentEarning > 0){
                 PointHistoryModel::create(array(
                     'user_id'=>$parent_user,
@@ -543,16 +537,16 @@ class Users extends Component
         $data['u_id'] = $request->u_id;
         $settingModel = new SettingsModel();
         $withdrawal_settings = $settingModel->get_settings(array('label'=>'Withdrawal'));
-        $user_data = UsersModel::select('email_Verified','mobile_Verified','usd')->where(array('u_id'=>$request->u_id))->first();
-        
+        $user_data = UsersModel::select('email_Verified','user_banned','mobile_Verified','usd')->where(array('u_id'=>$request->u_id))->first();
+        if($user_data->user_banned == '1'){
+            return response()->json(['success'=>false,'message'=>'Your have been banned by the admin']); 
+        }
         if($user_data->email_Verified == 0 ){
             return response()->json(['success'=>false,'message'=>'Your Email address must be verified']); 
         }
-
         if($data['usd'] < $withdrawal_settings->MinWithdrawal ){
             return response()->json(['success'=>false,'message'=>'You must have to withdraw minimum ' . $withdrawal_settings->MinWithdrawal . ' USD']); 
         }
-        
         if($data['usd'] > $user_data->usd ){
             return response()->json(['success'=>false,'message'=>'Your cuurent balance is ' .$user_data->usd. ' USD']); 
         }
@@ -754,6 +748,51 @@ class Users extends Component
         });
         return response()->json(['success'=>true,'data'=>$dataa]);
     }
+
+    public function check_entries(){
+        $lists = DB::table('tbl_users')
+        ->select('ref_id', DB::raw('count(ref_id) as count'))
+        ->groupBy('ref_id')
+        ->orderBy(DB::raw('count(ref_id)'),'DESC')->get();
+        foreach($lists as $list){
+            $total = DB::table('tbl_point_history')
+            ->where(array('user_id'=>$list->ref_id,'earn_type'=>'r','ref_type'=>'p','timer_id'=>null))
+            ->select(DB::raw('sum(point) as total'))
+            ->first()->total;
+            if($list->count != ($total/1000)){
+                echo $list->ref_id . '&nbsp&nbsp&nbsp&nbsp' . $list->count ."&nbsp&nbsp&nbsp&nbsp&nbsp". $total . "<br>";
+            }
+        }
+    }
+    
+    public function update_ref_id(){
+        $lists = DB::table('tbl_users')
+        ->select('ref_id', DB::raw('count(ref_id) as count'))
+        ->groupBy('ref_id')
+        ->orderBy(DB::raw('count(ref_id)'),'DESC')->get();
+        foreach($lists as $list){
+            if($list->count != 0){ 
+                $notifications = DB::table('tbl_point_history')
+                ->join('tbl_notification','tbl_point_history.created_at','=','tbl_notification.created_at','left')
+                ->where(array('tbl_point_history.user_id'=>$list->ref_id,'tbl_notification.n_type'=>'r','tbl_notification.ref_type'=>'p','tbl_point_history.earn_type'=>'r','tbl_point_history.ref_type'=>'p','tbl_point_history.child_id'=>null))
+                ->select('tbl_point_history.ph_id as ph_id','tbl_point_history.created_at as pcreate','tbl_notification.created_at as ncreate','tbl_notification.sender as sender')
+                ->get();
+                $ph_update = array();
+                foreach($notifications as $i=>$notification){
+                    PointHistoryModel::where(array('ph_id'=>$notification->ph_id))->update(array('child_id'=>$notification->sender));
+                }
+            }   
+        }
+        $notifications = DB::table('tbl_point_history')
+        ->join('tbl_notification','tbl_point_history.created_at','=','tbl_notification.created_at','left')
+        ->where(array('tbl_point_history.user_id'=>744,'tbl_notification.n_type'=>'r','tbl_notification.ref_type'=>'p','tbl_point_history.earn_type'=>'r','tbl_point_history.ref_type'=>'p','tbl_point_history.child_id'=>null))
+        ->select('tbl_point_history.ph_id as ph_id','tbl_point_history.created_at as pcreate','tbl_notification.created_at as ncreate','tbl_notification.sender as sender')
+        ->get();
+        $ph_update = array();
+        foreach($notifications as $i=>$notification){
+            PointHistoryModel::where(array('ph_id'=>$notification->ph_id))->update(array('child_id'=>$notification->sender));
+        }
+    }   
 
 
 

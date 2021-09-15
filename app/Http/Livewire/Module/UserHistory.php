@@ -13,7 +13,6 @@ class UserHistory extends Component
     public $total_earning;
     public $total_withdrawal;
     public $total_referal_earning;
-
     public $tab = 'child_users';
     
     public function mount($id)
