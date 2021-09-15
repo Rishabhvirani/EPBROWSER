@@ -5,7 +5,7 @@ use Monarobase\CountryList\CountryListFacade;
 use App\Models\UsersModel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class Edit extends Component
@@ -14,7 +14,6 @@ class Edit extends Component
     public $countries;
     public $state=[];
     protected $listeners = ['openEdit' => 'openform'];
-    
     public function openform($u_id){
         $this->user_id=$u_id;
         $this->state = UsersModel::select('username','email','mobile','email_verified','mobile_verified','user_banned','country')->where(array('u_id'=>$u_id))->first()->toArray();
@@ -34,6 +33,9 @@ class Edit extends Component
         $this->state['email_verified'] = $this->state['email_verified'] ==  true ? '1' :  '0';
         $this->state['mobile_verified'] = $this->state['mobile_verified'] == true ? '1' : '0';
         $this->state['user_banned'] = $this->state['user_banned'] == true ? '1' : '0';
+        if($this->state['user_banned'] == '1'){
+            $this->state['api_token'] = Str::random(60);
+        }
         $rules = [
             'username' => "required|alpha_dash|unique:tbl_users,username,$this->user_id,u_id",
             'email' => "required|email|unique:tbl_users,email,$this->user_id,u_id",

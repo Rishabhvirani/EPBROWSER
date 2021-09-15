@@ -23,10 +23,7 @@ use Carbon\Carbon;
 class Users extends Component
 {
     public $users;
-    
-
     protected $listeners = ['userCreated' => 'render'];
-    
     public $rules = [
         'username' => 'required|alpha_dash|unique:tbl_users',
         'email' => 'required|email|unique:tbl_users',
@@ -540,16 +537,16 @@ class Users extends Component
         $data['u_id'] = $request->u_id;
         $settingModel = new SettingsModel();
         $withdrawal_settings = $settingModel->get_settings(array('label'=>'Withdrawal'));
-        $user_data = UsersModel::select('email_Verified','mobile_Verified','usd')->where(array('u_id'=>$request->u_id))->first();
-        
+        $user_data = UsersModel::select('email_Verified','user_banned','mobile_Verified','usd')->where(array('u_id'=>$request->u_id))->first();
+        if($user_data->user_banned == '1'){
+            return response()->json(['success'=>false,'message'=>'Your have been banned by the admin']); 
+        }
         if($user_data->email_Verified == 0 ){
             return response()->json(['success'=>false,'message'=>'Your Email address must be verified']); 
         }
-
         if($data['usd'] < $withdrawal_settings->MinWithdrawal ){
             return response()->json(['success'=>false,'message'=>'You must have to withdraw minimum ' . $withdrawal_settings->MinWithdrawal . ' USD']); 
         }
-        
         if($data['usd'] > $user_data->usd ){
             return response()->json(['success'=>false,'message'=>'Your cuurent balance is ' .$user_data->usd. ' USD']); 
         }
