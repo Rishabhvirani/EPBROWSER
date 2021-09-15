@@ -27,6 +27,7 @@ Route::get('/verify_email/{id}',[Users::class,'verify_email']);
 // Route::POST('users/get_users',[Users::class,'get_users']);
 Route::middleware(['auth:sanctum', 'verified'])->get('/users/history/{id}', [Users::class,'get_user_history'])->name('User History');
 Route::middleware(['auth:sanctum', 'verified'])->get('/users/check_entries', [Users::class,'check_entries'])->name('Check Entries');
+Route::middleware(['auth:sanctum', 'verified'])->get('/users/update_ref_id', [Users::class,'update_ref_id'])->name('update_ref_id');
 
 Route::get('/', function () {
     return redirect('/login');
