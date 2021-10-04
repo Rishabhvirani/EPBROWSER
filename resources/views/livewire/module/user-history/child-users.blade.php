@@ -15,6 +15,7 @@
                         <th>Email</th>
                         <th>Mobile</th>
                         <th>Created at</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,6 +33,7 @@
                                         <td>{{$user->email_verified}}</td>
                                         <td>{{$user->mobile_verified}}</td>    
                                         <td>{{$user->created_at->format('d-M-Y')}}</td> 
+                                        <td><span data-toggle="modal" data-target="#edit" wire:click="openEdit('{{ $user->u_id }}')" wire:key="{{ $user->u_id }}" class="badge badge-warning">Edit</span></td>
                                 </tr>    
                             <?php
                         }
@@ -41,3 +43,4 @@
         </div>  
     </div>
 </div>
+@livewire('forms.user.edit')

@@ -50,7 +50,7 @@ class Edit extends Component
             if(UsersModel::where(array('u_id'=>$this->user_id))->update($this->state)){
                 $this->reset(['user_id','state']);
                 $this->dispatchBrowserEvent('closeform');
-                $this->dispatchBrowserEvent('alert', ['type' => 'success',  'message' => 'User Created']);
+                $this->dispatchBrowserEvent('alert', ['type' => 'success',  'message' => 'User Updated']);
             }else{
                 $this->dispatchBrowserEvent(
                     'alert', ['type' => 'danger',  'message' => 'Something Went wrong']);

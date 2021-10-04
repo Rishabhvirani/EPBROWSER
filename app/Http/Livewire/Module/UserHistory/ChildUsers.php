@@ -11,8 +11,8 @@ class ChildUsers extends Component
     public $users;
 
     public function mount(){
-        $this->users = UsersModel::where(array('status'=>'0','ref_id'=>$this->user))->OrderBy('u_id','DESC')->get();
         $this->dispatchBrowserEvent('table');
+        $this->users = UsersModel::where(array('status'=>'0','ref_id'=>$this->user))->OrderBy('u_id','DESC')->get();
     }
 
 
@@ -21,4 +21,9 @@ class ChildUsers extends Component
         return view('livewire.module.user-history.child-users');
         
     }
+    public function openEdit($u_id){
+        $this->emit('openEdit',$u_id);
+        $this->mount();
+    }
+
 }

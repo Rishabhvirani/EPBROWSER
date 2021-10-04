@@ -75,23 +75,15 @@
     <script src="{{ asset('assets/js/app.js') }}"></script>
     <script src="{{ asset('plugins/notification/snackbar/snackbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/components/notification/custom-snackbar.js') }}"></script>
-    
     <script src="{{ asset('assets/js/custom.js') }}"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>
     <script src="{{ asset('plugins/table/datatable/datatables.js') }}"></script>
-    
-
     <script>
     
             window.addEventListener('name-updated', event => {
                 $('#table').DataTable({
                     responsive: true
                 });
-
             });
-
     </script>
-
-
-
 </html>

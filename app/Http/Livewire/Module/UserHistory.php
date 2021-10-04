@@ -14,10 +14,12 @@ class UserHistory extends Component
     public $total_withdrawal;
     public $total_referal_earning;
     public $tab = 'child_users';
+    public $parent_details;
     
     public function mount($id)
     {
         $this->user_id = $id;   
+        $this->parent_details = UsersModel::where(array('status'=>'0','u_id'=>$this->user_id))->first();
         $this->total_referal_user = UsersModel::where(array('status'=>'0','ref_id'=>$this->user_id))->count();
         $this->total_earning = PointHistoryModel::where(array('status'=>'0','user_id'=>$this->user_id))->sum('point');
         $this->total_withdrawal = WithdrawalModel::where(array('status'=>'1','user_id'=>$this->user_id))->sum('usd');
@@ -28,5 +30,7 @@ class UserHistory extends Component
     {
         return view('livewire.module.user-history');
     }
+
+    
 
 }

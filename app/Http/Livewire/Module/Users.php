@@ -586,8 +586,6 @@ class Users extends Component
             }
             $request->t_id = $todaystimer->timer_id + 1;
         }
-        
-        
 
         $t_details =TimerModel::where(array('t_id'=>$request->t_id))->first();
         $counter = TimerHistoryModel::where(array('timer_id'=>$request->t_id,'user_id'=>$request->u_id))->where('created_at','like',$today)->get()->count();
@@ -722,11 +720,8 @@ class Users extends Component
                 )
             );
         }
-
         return response()->json(['success'=>true,'message'=>"Congratulations, you have Completed timer $request->t_id"]);
-        
-    }
-
+    }   
 
     public function get_timer(Request $request){
         $user_id = $request->u_id;

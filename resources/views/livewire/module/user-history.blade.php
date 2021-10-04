@@ -4,6 +4,11 @@
             <div class="widget-heading">
                 <h5 class="">User History</h5>
             </div>
+            <div>
+                <p><b>Parent User :</b> {{$parent_details->username}} </p>
+                <p><b>Point :</b> {{$parent_details->points}}  &nbsp;&nbsp;&nbsp; <b>USD :</b> {{$parent_details->usd}} </p>
+            </div>
+
             <div class="user_dashbaord">
                 <div class="widget-content">
                     <div class="transactions-list">
@@ -74,8 +79,6 @@
                     </div>
                 </div>
             </div>
-
-
             <div class="container">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
