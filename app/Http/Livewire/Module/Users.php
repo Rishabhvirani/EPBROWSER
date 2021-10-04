@@ -46,7 +46,6 @@ class Users extends Component
     }
 
     public function get_users(Request $request){
-        
         $users = UsersModel::where(array('status'=>'0'))->OrderBy('u_id','DESC')->get();
         $search = $request->query('search', array('value' => '', 'regex' => false));
         $draw = $request->query('draw', 0);
@@ -107,23 +106,20 @@ class Users extends Component
             $this->rules['ref_code'] = [new Referal($data)];
             $validator = Validator::make($data, $this->rules,$this->messages);
             if ($validator->passes()){
-                if($ref_setting->isReferalActive == 1){
+                // if($ref_setting->isReferalActive == 1){
                     $ref_user =  UsersModel::where('ref_code','=',strtolower($data['ref_code']))->where('status','0')->first();
                     if(isset($ref_user->u_id)){
                         $data['ref_id'] = $ref_user->u_id;    
-                        $data['points'] = $ref_setting->childEarning;   
-                        UsersModel::where(array('u_id'=>$data['ref_id']))->update(['points' => DB::raw('points + '.$ref_setting->parentEarning)]);
+                        // $data['points'] = $ref_setting->childEarning;   
+                        // UsersModel::where(array('u_id'=>$data['ref_id']))->update(['points' => DB::raw('points + '.$ref_setting->parentEarning)]);
                     }
-                }
+                // }
                 $user = $userModel->Prepare_User($data);
                 $user = UsersModel::create($user);
                 if($user){
                     // if(config('app.env') === 'production'){
-                        $this->send_email_verification($user->email,$user->verification_code);
+                        // $this->send_email_verification($user->email,$user->verification_code);
                     // }
-                    if(isset($ref_user->u_id) && $ref_setting->isReferalActive == 1){
-                        $this->insert_point_history($user->ref_id,$user->u_id);
-                    }
                     $response=array(
                         'success'=>true,
                         'message'=>'User Created Successfully',
@@ -132,7 +128,7 @@ class Users extends Component
                             'username'=>$user->username,
                             'email'=>$user->email,
                             'mobile'=>$user->mobile,
-                            'points'=>$user->points == null ? "0" : $user->points,
+                            'points'=>'0',
                             'coins'=>$user->coins == null ? "0" : $user->coins,
                             'ref_code'=>$user->ref_code,
                             'usd'=>$user->usd ==  null ? "0" : $user->usd,
@@ -180,7 +176,7 @@ class Users extends Component
                 );
             }
             
-            if($ref_setting->parentEarning > 0){
+            if($ref_setting->parentEarning > 0 && $ref_setting->isReferalActive == '1'){
                 PointHistoryModel::create(array(
                     'user_id'=>$parent_user,
                     'point'=>$ref_setting->parentEarning,
@@ -345,7 +341,19 @@ class Users extends Component
 
     public function verify_email(){
         $slug = request()->segment(count(request()->segments()));
+        $user = UsersModel::where('verification_code',$slug)->first();
+        if($user->email_verified == 1){
+            return view('template.EmailVerified');
+        }
         UsersModel::where('verification_code',$slug)->update(['email_verified'=>'1']);
+        $settings =  new SettingsModel;
+        $refdata['label'] = 'referal';
+        $ref_setting = $settings->get_settings($refdata);
+        UsersModel::where('u_id',$user->u_id)->update(['points'=>$ref_setting->childEarning]);
+        if($ref_setting->isReferalActive == '1'){
+            UsersModel::where('u_id',$user->ref_id)->update(['points' => DB::raw('points + '.$ref_setting->parentEarning)]);
+        }
+        $this->insert_point_history($user->ref_id,$user->u_id);
         return view('template.EmailVerified');
     }
 
@@ -617,7 +625,6 @@ class Users extends Component
         $t_details =TimerModel::where(array('t_id'=>$request->t_id))->first();
         $user =  UsersModel::where(array('u_id'=>$request->u_id))->first();
         $parent_user =  UsersModel::where(array('u_id'=>$user->ref_id))->first();
-
         if($user->ref_id != '' || $user->ref_id != null){
             $settings =  new SettingsModel;
             $gendata['label'] = 'general';
@@ -759,7 +766,7 @@ class Users extends Component
             }
         }
     }
-    
+
     public function update_ref_id(){
         $lists = DB::table('tbl_users')
         ->select('ref_id', DB::raw('count(ref_id) as count'))

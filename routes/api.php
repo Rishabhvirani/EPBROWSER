@@ -39,7 +39,6 @@ Route::prefix('users')->group(function () {
         Route::post('/get_timer',[Users::class,'get_timer']);
         
     });
-    
     Route::post('/check_user_details',[Users::class,'check_user_details']);
     Route::post('/register',[Users::class,'register']);
     Route::post('/login',[Users::class,'login']);    
