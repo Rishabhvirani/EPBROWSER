@@ -118,7 +118,7 @@ class Users extends Component
                 $user = UsersModel::create($user);
                 if($user){
                     // if(config('app.env') === 'production'){
-                        // $this->send_email_verification($user->email,$user->verification_code);
+                        $this->send_email_verification($user->email,$user->verification_code);
                     // }
                     $response=array(
                         'success'=>true,
